@@ -7,9 +7,17 @@ let image;
 let leaderboardKey;
 
 document.getElementById('start-button').addEventListener('click', startGame);
+document.getElementById('size').addEventListener('change', onSizeChange);
+
+function onSizeChange() {
+    size = parseInt(document.getElementById('size').value);
+    leaderboardKey = `leaderboard_${size}x${size}`;
+    loadLeaderboard();
+}
 
 function startGame() {
     size = parseInt(document.getElementById('size').value);
+    leaderboardKey = `leaderboard_${size}x${size}`;
     const imageSelect = document.getElementById('image-select');
     image = imageSelect.value;
     initGame();
@@ -19,17 +27,15 @@ function initGame() {
     clearInterval(timerInterval);
     timeElapsed = 0;
     document.getElementById('timer').innerText = 'Time: 0s';
+    document.getElementById('timer').style.color = 'black'; // Reset timer color
     document.getElementById('puzzle').innerHTML = '';
-    document.getElementById('leaderboard-table').innerHTML = `
-        <tr>
-            <th>Rank</th>
-            <th>Time (s)</th>
-        </tr>
-    `;
     tiles = [];
     emptyX = size - 1;
     emptyY = size - 1;
-    leaderboardKey = `leaderboard_${size}x${size}`;
+
+    const fullImage = document.getElementById('full-image');
+    fullImage.src = image;
+    fullImage.style.display = 'none';
 
     const puzzle = document.getElementById('puzzle');
     const puzzleSize = 400;
@@ -102,9 +108,10 @@ function moveTile(e) {
         swapTiles(tile);
         if (checkWin()) {
             clearInterval(timerInterval);
-            alert(`Congratulations! You solved the puzzle in ${timeElapsed}s.`);
+            showWinMessage();
             saveTime(timeElapsed);
             loadLeaderboard();
+            revealFullImage();
         }
     }
 }
@@ -140,6 +147,28 @@ function checkWin() {
     return true;
 }
 
+function showWinMessage() {
+    const timerElement = document.getElementById('timer');
+    timerElement.innerText = `You won in ${timeElapsed} seconds!`;
+    timerElement.style.color = 'green';
+}
+
+function revealFullImage() {
+    const fullImage = document.getElementById('full-image');
+    fullImage.style.display = 'block';
+
+    // Fade out tiles
+    tiles.forEach(tile => {
+        tile.style.opacity = '0';
+    });
+
+    // Remove tiles after fade-out
+    setTimeout(() => {
+        const puzzle = document.getElementById('puzzle');
+        puzzle.innerHTML = '';
+    }, 1000);
+}
+
 function saveTime(time) {
     let times = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
     times.push(time);
@@ -151,6 +180,13 @@ function saveTime(time) {
 function loadLeaderboard() {
     const times = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
     const table = document.getElementById('leaderboard-table');
+    // Clear existing rows except the header
+    table.innerHTML = `
+        <tr>
+            <th>Rank</th>
+            <th>Time (s)</th>
+        </tr>
+    `;
     times.forEach((time, index) => {
         const row = table.insertRow();
         const rankCell = row.insertCell(0);
