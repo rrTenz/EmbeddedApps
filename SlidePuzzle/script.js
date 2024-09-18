@@ -187,6 +187,11 @@ function loadLeaderboard() {
             <th>Time (s)</th>
         </tr>
     `;
+
+    // Update the leaderboard title
+    const leaderboardTitle = document.getElementById('leaderboard-title');
+    leaderboardTitle.innerText = `Leaderboard ${size}x${size}`;
+
     times.forEach((time, index) => {
         const row = table.insertRow();
         const rankCell = row.insertCell(0);
@@ -195,3 +200,4 @@ function loadLeaderboard() {
         timeCell.innerText = time;
     });
 }
+
