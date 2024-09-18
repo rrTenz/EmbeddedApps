@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <title>Slide Puzzle Game</title>
     <style>
         body {
@@ -20,7 +20,7 @@
 
         .tile {
             position: absolute;
-            background-size: cover;
+            background-size: cover; /* We'll adjust this in JavaScript */
             border: 1px solid #ccc;
             box-sizing: border-box;
             cursor: pointer;
@@ -51,11 +51,17 @@
 
     <div id="controls">
         <label for="size">Select Puzzle Size:</label>
-        <input type="number" id="size" value="3" min="3" max="10" />
-        <br /><br />
-        <label for="image">Select Image:</label>
-        <input type="file" id="image" accept="image/*" />
-        <br /><br />
+        <input type="number" id="size" value="3" min="3" max="10">
+        <br><br>
+        <!-- Image selection dropdown -->
+        <label for="image-select">Select Image:</label>
+        <select id="image-select">
+            <option value="45.png">Image 1</option>
+            <option value="46.png">Image 2</option>
+            <option value="47.png">Image 3</option>
+            <!-- Add more options as needed -->
+        </select>
+        <br><br>
         <button id="start-button">Start Game</button>
     </div>
 
@@ -78,4 +84,3 @@
 
 </body>
 </html>
-

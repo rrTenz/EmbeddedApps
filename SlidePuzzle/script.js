@@ -10,17 +10,9 @@ document.getElementById('start-button').addEventListener('click', startGame);
 
 function startGame() {
     size = parseInt(document.getElementById('size').value);
-    const imageInput = document.getElementById('image');
-    if (imageInput.files && imageInput.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            image = e.target.result;
-            initGame();
-        }
-        reader.readAsDataURL(imageInput.files[0]);
-    } else {
-        alert('Please select an image.');
-    }
+    const imageSelect = document.getElementById('image-select');
+    image = imageSelect.value;
+    initGame();
 }
 
 function initGame() {
@@ -53,9 +45,21 @@ function initGame() {
             tile.style.left = `${(x * puzzleSize) / size}px`;
             tile.style.top = `${(y * puzzleSize) / size}px`;
             tile.style.backgroundImage = `url(${image})`;
+
+            // Set background size to the size of the full puzzle
+            tile.style.backgroundSize = `${puzzleSize}px ${puzzleSize}px`;
+
+            // Set background position to show the correct portion of the image
             tile.style.backgroundPosition = `-${(x * puzzleSize) / size}px -${(y * puzzleSize) / size}px`;
+
+            // Store the original position for win checking
+            tile.dataset.correctX = x;
+            tile.dataset.correctY = y;
+
+            // Set current position
             tile.dataset.x = x;
             tile.dataset.y = y;
+
             tile.addEventListener('click', moveTile);
             puzzle.appendChild(tile);
             tiles.push(tile);
@@ -127,8 +131,8 @@ function checkWin() {
     for (const tile of tiles) {
         const x = parseInt(tile.dataset.x);
         const y = parseInt(tile.dataset.y);
-        const correctX = parseInt(tile.style.backgroundPositionX) * -1 / (400 / size);
-        const correctY = parseInt(tile.style.backgroundPositionY) * -1 / (400 / size);
+        const correctX = parseInt(tile.dataset.correctX);
+        const correctY = parseInt(tile.dataset.correctY);
         if (x !== correctX || y !== correctY) {
             return false;
         }
