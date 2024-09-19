@@ -80,6 +80,7 @@ function initGame() {
     tiles = [];
     emptyX = size - 1;
     emptyY = size - 1;
+    console.log(`Empty tile position initialized at: (${emptyX}, ${emptyY})`);
 
     const fullImage = document.getElementById('full-image');
     const encodedImage = encodeURI(image);
@@ -92,14 +93,18 @@ function initGame() {
     // Create tiles
     for (let y = 0; y < size; y++) {
         for (let x = 0; x < size; x++) {
-            if (x === emptyX && y === emptyY) continue; // Skip the empty tile
+            if (x === emptyX && y === emptyY) {
+                console.log(`Skipping empty tile at position: (${x}, ${y})`);
+                continue; // Skip the empty tile
+            }
             const tile = document.createElement('div');
             tile.classList.add('tile');
 
             // Calculate tile size and position
-            tile.style.width = tile.style.height = `${(100 / size)}%`;
-            tile.style.left = `${(x * 100) / size}%`;
-            tile.style.top = `${(y * 100) / size}%`;
+            const tileSize = 100 / size;
+            tile.style.width = tile.style.height = `${tileSize}%`;
+            tile.style.left = `${x * tileSize}%`;
+            tile.style.top = `${y * tileSize}%`;
 
             // Use encoded URI for the image
             tile.style.backgroundImage = `url("${encodedImage}")`;
@@ -121,6 +126,8 @@ function initGame() {
             tile.addEventListener('click', moveTile);
             puzzle.appendChild(tile);
             tiles.push(tile);
+
+            console.log(`Created tile at position: (${x}, ${y})`);
         }
     }
 
@@ -137,6 +144,7 @@ function moveTile(e) {
 
     if ((tileX === emptyX && Math.abs(tileY - emptyY) === 1) || (tileY === emptyY && Math.abs(tileX - emptyX) === 1)) {
         swapTiles(tile);
+        console.log(`Moved tile to position: (${tile.dataset.x}, ${tile.dataset.y})`);
         if (checkWin()) {
             clearInterval(timerInterval);
             showWinMessage();
@@ -155,8 +163,8 @@ function swapTiles(tile) {
     emptyY = parseInt(tile.dataset.y);
     tile.dataset.x = tempX;
     tile.dataset.y = tempY;
-    tile.style.left = `${(tempX * 100) / size}%`;
-    tile.style.top = `${(tempY * 100) / size}%`;
+    tile.style.left = `${tempX * (100 / size)}%`;
+    tile.style.top = `${tempY * (100 / size)}%`;
 }
 
 // Function to shuffle tiles
@@ -266,6 +274,19 @@ function loadLeaderboard() {
         timeCell.innerText = time;
     });
 }
+
+// Function to adjust puzzle container size for browsers that don't support aspect-ratio
+function adjustPuzzleContainerSize() {
+    const puzzleContainer = document.getElementById('puzzle-container');
+    const width = puzzleContainer.offsetWidth;
+    puzzleContainer.style.height = `${width}px`;
+}
+
+// Call this function on window resize
+window.addEventListener('resize', adjustPuzzleContainerSize);
+
+// Call it when the page loads
+adjustPuzzleContainerSize();
 
 // Load the leaderboard when the page first loads
 loadLeaderboard();

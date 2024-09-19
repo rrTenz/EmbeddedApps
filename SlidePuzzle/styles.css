@@ -22,11 +22,11 @@ body {
 #puzzle-container {
     position: relative;
     width: 100%;
-    max-width: 400px; /* Maximum width for larger screens */
-    height: 0;
-    padding-bottom: 100%; /* Maintain square aspect ratio */
+    max-width: 400px; /* Adjust as needed */
+    aspect-ratio: 1 / 1; /* Enforce square aspect ratio */
     margin: 0 auto;
     overflow: hidden; /* Hide any overflow */
+    /* Removed height and padding-bottom */
 }
 
 #puzzle, #full-image {
