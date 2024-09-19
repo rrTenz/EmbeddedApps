@@ -10,9 +10,9 @@ let leaderboardKey = `leaderboard_${size}x${size}`; // Initialize leaderboard ke
 
 // Array of image filenames
 const imageFilenames = [
-    'season 45 logo.png',
-    'season 46 logo.png',
-    'season 47 logo.png',
+    'Season 47 Logo.png',
+    'Season 46 Logo.png',
+    'Season 45 Logo.png',
     // Add more filenames as needed
 ];
 
