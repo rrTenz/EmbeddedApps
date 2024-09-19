@@ -72,6 +72,15 @@ th, td {
     color: #555;
 }
 
+#timer, #move-counter {
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+#puzzle-container {
+    margin-top: 10px;
+}
+
 /* Media Query for Small Screens */
 @media (max-width: 600px) {
     #controls, #leaderboard {

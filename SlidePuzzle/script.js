@@ -3,6 +3,7 @@
 let size = 3; // Default puzzle size matching the default value in index.html
 let timerInterval;
 let timeElapsed = 0;
+let moveCount = 0; // Initialize move counter
 let emptyX, emptyY;
 let tiles = [];
 let image;
@@ -86,7 +87,9 @@ function initGame() {
     console.log(`Initializing game with size: ${size}`);
     clearInterval(timerInterval);
     timeElapsed = 0;
-    document.getElementById('timer').innerText = 'Time: 0s';
+    moveCount = 0; // Reset move counter
+    document.getElementById('timer').innerText = 'Time: 0.00s';
+    document.getElementById('move-counter').innerText = 'Moves: 0';
     document.getElementById('timer').style.color = 'black'; // Reset timer color
     const puzzle = document.getElementById('puzzle');
     puzzle.innerHTML = '';
@@ -123,7 +126,7 @@ function initGame() {
             tile.style.backgroundSize = `${size * 100}% ${size * 100}%`;
 
             // Corrected background position calculation
-            tile.style.backgroundPosition = `-${x * 100}% -${y * 100}%`;
+            tile.style.backgroundPosition = `-${x * (100 / (size - 1))}% -${y * (100 / (size - 1))}%`;
 
             // Store the original position for win checking
             tile.dataset.correctX = x;
@@ -154,11 +157,13 @@ function moveTile(e) {
 
     if ((tileX === emptyX && Math.abs(tileY - emptyY) === 1) || (tileY === emptyY && Math.abs(tileX - emptyX) === 1)) {
         swapTiles(tile);
+        moveCount++; // Increment move counter
+        document.getElementById('move-counter').innerText = `Moves: ${moveCount}`;
         console.log(`Moved tile to position: (${tile.dataset.x}, ${tile.dataset.y})`);
         if (checkWin()) {
             clearInterval(timerInterval);
             showWinMessage();
-            saveTime(timeElapsed);
+            saveScore(timeElapsed, moveCount);
             loadLeaderboard();
             revealFullImage();
         }
@@ -204,9 +209,9 @@ function getNeighbors(x, y) {
 // Function to start the game timer
 function startTimer() {
     timerInterval = setInterval(() => {
-        timeElapsed++;
-        document.getElementById('timer').innerText = `Time: ${timeElapsed}s`;
-    }, 1000);
+        timeElapsed += 0.01;
+        document.getElementById('timer').innerText = `Time: ${timeElapsed.toFixed(2)}s`;
+    }, 10); // Update every 10 milliseconds
 }
 
 // Function to check if the puzzle is solved
@@ -230,7 +235,7 @@ function checkWin() {
 // Function to display the win message
 function showWinMessage() {
     const timerElement = document.getElementById('timer');
-    timerElement.innerText = `You won in ${timeElapsed} seconds!`;
+    timerElement.innerText = `You won in ${timeElapsed.toFixed(2)} seconds! Moves: ${moveCount}`;
     timerElement.style.color = 'green';
 }
 
@@ -251,24 +256,27 @@ function revealFullImage() {
     }, 1000); // Duration matches the CSS transition duration
 }
 
-// Function to save the player's time to the leaderboard
-function saveTime(time) {
-    let times = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
-    times.push(time);
-    times.sort((a, b) => a - b);
-    times = times.slice(0, 5); // Keep top 5 times
-    localStorage.setItem(leaderboardKey, JSON.stringify(times));
+// Function to save the player's score to the leaderboard
+function saveScore(time, moves) {
+    let scores = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
+    scores.push({ time: time, moves: moves });
+    // Sort by time
+    scores.sort((a, b) => a.time - b.time);
+    // Keep top 5 scores
+    scores = scores.slice(0, 5);
+    localStorage.setItem(leaderboardKey, JSON.stringify(scores));
 }
 
 // Function to load and display the leaderboard
 function loadLeaderboard() {
-    const times = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
+    const scores = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
     const table = document.getElementById('leaderboard-table');
     // Clear existing rows except the header
     table.innerHTML = `
         <tr>
             <th>Rank</th>
             <th>Time (s)</th>
+            <th>Moves</th>
         </tr>
     `;
 
@@ -276,12 +284,14 @@ function loadLeaderboard() {
     const leaderboardTitle = document.getElementById('leaderboard-title');
     leaderboardTitle.innerText = `Leaderboard ${size}x${size}`;
 
-    times.forEach((time, index) => {
+    scores.forEach((score, index) => {
         const row = table.insertRow();
         const rankCell = row.insertCell(0);
         const timeCell = row.insertCell(1);
+        const movesCell = row.insertCell(2);
         rankCell.innerText = index + 1;
-        timeCell.innerText = time;
+        timeCell.innerText = score.time.toFixed(2);
+        movesCell.innerText = score.moves;
     });
 }
 
