@@ -56,6 +56,12 @@ document.getElementById('size').addEventListener('change', onSizeChange);
 // Function to handle changes in puzzle size input
 function onSizeChange() {
     size = parseInt(document.getElementById('size').value);
+    console.log(`Size changed to: ${size}`);
+    if (isNaN(size) || size < 3 || size > 10) {
+        alert('Please enter a valid puzzle size between 3 and 10.');
+        size = 3; // Set default size
+        document.getElementById('size').value = size; // Reset input field
+    }
     leaderboardKey = `leaderboard_${size}x${size}`;
     loadLeaderboard();
 }
@@ -63,6 +69,12 @@ function onSizeChange() {
 // Function to start the game
 function startGame() {
     size = parseInt(document.getElementById('size').value);
+    console.log(`Starting game with size: ${size}`);
+    if (isNaN(size) || size < 3 || size > 10) {
+        alert('Please enter a valid puzzle size between 3 and 10.');
+        size = 3; // Set default size
+        document.getElementById('size').value = size; // Reset input field
+    }
     leaderboardKey = `leaderboard_${size}x${size}`;
     const imageSelect = document.getElementById('image-select');
     image = imageSelect.value;
@@ -71,6 +83,7 @@ function startGame() {
 
 // Function to initialize the game
 function initGame() {
+    console.log(`Initializing game with size: ${size}`);
     clearInterval(timerInterval);
     timeElapsed = 0;
     document.getElementById('timer').innerText = 'Time: 0s';
@@ -88,7 +101,6 @@ function initGame() {
     fullImage.style.display = 'none';
 
     const puzzleContainer = document.getElementById('puzzle-container');
-    const puzzleSize = puzzleContainer.offsetWidth; // Get the width of the container
 
     // Create tiles
     for (let y = 0; y < size; y++) {
