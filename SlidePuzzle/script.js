@@ -100,8 +100,6 @@ function initGame() {
     fullImage.src = encodedImage; // Use encoded URI
     fullImage.style.display = 'none';
 
-    const puzzleContainer = document.getElementById('puzzle-container');
-
     // Create tiles
     for (let y = 0; y < size; y++) {
         for (let x = 0; x < size; x++) {
@@ -121,11 +119,11 @@ function initGame() {
             // Use encoded URI for the image
             tile.style.backgroundImage = `url("${encodedImage}")`;
 
-            // Set background size to the total size of the puzzle
+            // Set background size to cover the entire puzzle area
             tile.style.backgroundSize = `${size * 100}% ${size * 100}%`;
 
             // Corrected background position calculation
-            tile.style.backgroundPosition = `-${(x * 100) / size}% -${(y * 100) / size}%`;
+            tile.style.backgroundPosition = `-${x * 100}% -${y * 100}%`;
 
             // Store the original position for win checking
             tile.dataset.correctX = x;
