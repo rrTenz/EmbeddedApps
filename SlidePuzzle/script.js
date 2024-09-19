@@ -285,20 +285,34 @@ function revealFullImage() {
     }, 1000); // Duration matches the CSS transition duration
 }
 
-// Function to save the player's score to the leaderboard
-function saveScore(time, moves) {
-    let scores = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
-    scores.push({ time: time, moves: moves });
-    // Sort by time
-    scores.sort((a, b) => a.time - b.time);
-    // Keep top 5 scores
-    scores = scores.slice(0, 5);
-    localStorage.setItem(leaderboardKey, JSON.stringify(scores));
-}
-
 // Function to load and display the leaderboard
 function loadLeaderboard() {
-    const scores = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
+    let scores = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
+
+    // Check for old leaderboard entries and convert them
+    let updated = false;
+    scores = scores.map(entry => {
+        if (typeof entry === 'number') {
+            // Old format detected, convert to new format
+            updated = true;
+            return { time: entry, moves: '-' }; // Use '-' as a placeholder for moves
+        } else if (entry && typeof entry.time === 'number') {
+            // Entry is already in the new format
+            return entry;
+        } else {
+            // Handle any unexpected entries
+            return { time: 0, moves: '-' };
+        }
+    });
+
+    if (updated) {
+        // Save the updated leaderboard back to localStorage
+        localStorage.setItem(leaderboardKey, JSON.stringify(scores));
+    }
+
+    // Sort the scores by time
+    scores.sort((a, b) => a.time - b.time);
+
     const table = document.getElementById('leaderboard-table');
     // Clear existing rows except the header
     table.innerHTML = `
@@ -320,8 +334,44 @@ function loadLeaderboard() {
         const movesCell = row.insertCell(2);
         rankCell.innerText = index + 1;
         timeCell.innerText = formatTime(score.time, true);
-        movesCell.innerText = score.moves;
+        movesCell.innerText = score.moves !== undefined ? score.moves : '-';
     });
+}
+
+// Function to save the player's score to the leaderboard
+function saveScore(time, moves) {
+    let scores = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
+
+    // Check for old leaderboard entries and convert them
+    let updated = false;
+    scores = scores.map(entry => {
+        if (typeof entry === 'number') {
+            // Old format detected, convert to new format
+            updated = true;
+            return { time: entry, moves: '-' };
+        } else if (entry && typeof entry.time === 'number') {
+            // Entry is already in the new format
+            return entry;
+        } else {
+            // Handle any unexpected entries
+            return { time: 0, moves: '-' };
+        }
+    });
+
+    if (updated) {
+        // Save the updated leaderboard back to localStorage
+        localStorage.setItem(leaderboardKey, JSON.stringify(scores));
+    }
+
+    scores.push({ time: time, moves: moves });
+
+    // Sort the scores by time
+    scores.sort((a, b) => a.time - b.time);
+
+    // Keep top 5 scores
+    scores = scores.slice(0, 5);
+
+    localStorage.setItem(leaderboardKey, JSON.stringify(scores));
 }
 
 // Function to adjust puzzle container size for browsers that don't support aspect-ratio
@@ -339,3 +389,14 @@ adjustPuzzleContainerSize();
 
 // Load the leaderboard when the page first loads
 loadLeaderboard();
+
+// Add an event listener for the reset button
+document.getElementById('reset-leaderboard-button').addEventListener('click', resetLeaderboard);
+
+// Function to reset the leaderboard
+function resetLeaderboard() {
+    if (confirm('Are you sure you want to reset the leaderboard? This action cannot be undone.')) {
+        localStorage.removeItem(leaderboardKey);
+        loadLeaderboard();
+    }
+}
