@@ -18,10 +18,13 @@ const imageFilenames = [
 
 // Function to format the filenames
 function formatImageName(filename) {
-    // Remove the file extension
-    let name = filename.substring(0, filename.lastIndexOf('.')) || filename;
+    // Remove the directory path if present
+    let name = filename.substring(filename.lastIndexOf('/') + 1);
 
-    // Replace hyphens and underscores with spaces
+    // Remove the file extension
+    name = name.substring(0, name.lastIndexOf('.')) || name;
+
+    // Replace underscores and hyphens with spaces
     name = name.replace(/[-_]/g, ' ');
 
     // Capitalize each word
@@ -37,7 +40,7 @@ function populateImageSelect() {
 
     imageFilenames.forEach(filename => {
         const option = document.createElement('option');
-        option.value = filename; // Adjust path if images are in a subdirectory
+        option.value = filename; // Use the exact filename, including spaces
         option.text = formatImageName(filename);
         imageSelect.appendChild(option);
     });
@@ -79,7 +82,9 @@ function initGame() {
     emptyY = size - 1;
 
     const fullImage = document.getElementById('full-image');
-    fullImage.src = image;
+    const encodedImage = encodeURI(image);
+    fullImage.src = encodedImage; // Use encoded URI
+
     fullImage.style.display = 'none';
 
     const puzzleContainer = document.getElementById('puzzle-container');
@@ -96,7 +101,9 @@ function initGame() {
             tile.style.width = tile.style.height = `${(100 / size)}%`;
             tile.style.left = `${(x * 100) / size}%`;
             tile.style.top = `${(y * 100) / size}%`;
-            tile.style.backgroundImage = `url(${image})`;
+
+            // Use encoded URI for the image
+            tile.style.backgroundImage = `url("${encodedImage}")`;
 
             // Set background size to the total size of the puzzle
             tile.style.backgroundSize = `${size * 100}% ${size * 100}%`;
@@ -123,139 +130,4 @@ function initGame() {
     loadLeaderboard();
 }
 
-// Function to shuffle tiles
-function shuffleTiles() {
-    // Implement a shuffle algorithm
-    for (let i = 0; i < 1000; i++) {
-        const neighbors = getNeighbors(emptyX, emptyY);
-        const randIndex = Math.floor(Math.random() * neighbors.length);
-        const tile = neighbors[randIndex];
-        swapTiles(tile);
-    }
-}
-
-// Function to get neighboring tiles that can move into the empty space
-function getNeighbors(x, y) {
-    const neighbors = [];
-    tiles.forEach(tile => {
-        const tileX = parseInt(tile.dataset.x);
-        const tileY = parseInt(tile.dataset.y);
-        if ((tileX === x && Math.abs(tileY - y) === 1) || (tileY === y && Math.abs(tileX - x) === 1)) {
-            neighbors.push(tile);
-        }
-    });
-    return neighbors;
-}
-
-// Function to handle tile movement
-function moveTile(e) {
-    const tile = e.target;
-    const tileX = parseInt(tile.dataset.x);
-    const tileY = parseInt(tile.dataset.y);
-
-    if ((tileX === emptyX && Math.abs(tileY - emptyY) === 1) || (tileY === emptyY && Math.abs(tileX - emptyX) === 1)) {
-        swapTiles(tile);
-        if (checkWin()) {
-            clearInterval(timerInterval);
-            showWinMessage();
-            saveTime(timeElapsed);
-            loadLeaderboard();
-            revealFullImage();
-        }
-    }
-}
-
-// Function to swap a tile with the empty space
-function swapTiles(tile) {
-    const tempX = emptyX;
-    const tempY = emptyY;
-    emptyX = parseInt(tile.dataset.x);
-    emptyY = parseInt(tile.dataset.y);
-    tile.dataset.x = tempX;
-    tile.dataset.y = tempY;
-    tile.style.left = `${(tempX * 100) / size}%`;
-    tile.style.top = `${(tempY * 100) / size}%`;
-}
-
-// Function to start the game timer
-function startTimer() {
-    timerInterval = setInterval(() => {
-        timeElapsed++;
-        document.getElementById('timer').innerText = `Time: ${timeElapsed}s`;
-    }, 1000);
-}
-
-// Function to check if the puzzle is solved
-function checkWin() {
-    for (const tile of tiles) {
-        const x = parseInt(tile.dataset.x);
-        const y = parseInt(tile.dataset.y);
-        const correctX = parseInt(tile.dataset.correctX);
-        const correctY = parseInt(tile.dataset.correctY);
-        if (x !== correctX || y !== correctY) {
-            return false;
-        }
-    }
-    return true;
-}
-
-// Function to display the win message
-function showWinMessage() {
-    const timerElement = document.getElementById('timer');
-    timerElement.innerText = `You won in ${timeElapsed} seconds!`;
-    timerElement.style.color = 'green';
-}
-
-// Function to reveal the full image when the puzzle is solved
-function revealFullImage() {
-    const fullImage = document.getElementById('full-image');
-    fullImage.style.display = 'block';
-
-    // Fade out tiles
-    tiles.forEach(tile => {
-        tile.style.opacity = '0';
-    });
-
-    // Remove tiles after fade-out
-    setTimeout(() => {
-        const puzzle = document.getElementById('puzzle');
-        puzzle.innerHTML = '';
-    }, 1000); // Duration matches the CSS transition duration
-}
-
-// Function to save the player's time to the leaderboard
-function saveTime(time) {
-    let times = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
-    times.push(time);
-    times.sort((a, b) => a - b);
-    times = times.slice(0, 5); // Keep top 5 times
-    localStorage.setItem(leaderboardKey, JSON.stringify(times));
-}
-
-// Function to load and display the leaderboard
-function loadLeaderboard() {
-    const times = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
-    const table = document.getElementById('leaderboard-table');
-    // Clear existing rows except the header
-    table.innerHTML = `
-        <tr>
-            <th>Rank</th>
-            <th>Time (s)</th>
-        </tr>
-    `;
-
-    // Update the leaderboard title with the current puzzle size
-    const leaderboardTitle = document.getElementById('leaderboard-title');
-    leaderboardTitle.innerText = `Leaderboard ${size}x${size}`;
-
-    times.forEach((time, index) => {
-        const row = table.insertRow();
-        const rankCell = row.insertCell(0);
-        const timeCell = row.insertCell(1);
-        rankCell.innerText = index + 1;
-        timeCell.innerText = time;
-    });
-}
-
-// Load the leaderboard when the page first loads
-loadLeaderboard();
+// ... rest of your existing code ...
