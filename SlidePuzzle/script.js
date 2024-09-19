@@ -88,7 +88,7 @@ function initGame() {
     clearInterval(timerInterval);
     timeElapsed = 0;
     moveCount = 0; // Reset move counter
-    document.getElementById('timer').innerText = 'Time: 0.00s';
+    document.getElementById('timer').innerText = 'Time: 0';
     document.getElementById('move-counter').innerText = 'Moves: 0';
     document.getElementById('timer').style.color = 'black'; // Reset timer color
     const puzzle = document.getElementById('puzzle');
@@ -210,8 +210,37 @@ function getNeighbors(x, y) {
 function startTimer() {
     timerInterval = setInterval(() => {
         timeElapsed += 0.01;
-        document.getElementById('timer').innerText = `Time: ${timeElapsed.toFixed(2)}s`;
+        document.getElementById('timer').innerText = `Time: ${formatTime(timeElapsed, false)}`;
     }, 10); // Update every 10 milliseconds
+}
+
+// Function to format time according to the specified format
+function formatTime(timeInSeconds, includeHundredths) {
+    let totalHundredths = Math.round(timeInSeconds * 100);
+    let totalSeconds = Math.floor(totalHundredths / 100);
+    let hundredths = totalHundredths % 100;
+
+    let hours = Math.floor(totalSeconds / 3600);
+    let minutes = Math.floor((totalSeconds % 3600) / 60);
+    let seconds = totalSeconds % 60;
+
+    let timeString = "";
+    if (hours > 0) {
+        timeString += hours + ":";
+    }
+    if (minutes > 0 || hours > 0) {
+        timeString += minutes + ":";
+    }
+    if ((minutes > 0 || hours > 0) && seconds < 10) {
+        timeString += "0";
+    }
+    timeString += seconds;
+
+    if (includeHundredths) {
+        timeString += "." + (hundredths < 10 ? "0" + hundredths : hundredths);
+    }
+
+    return timeString;
 }
 
 // Function to check if the puzzle is solved
@@ -235,7 +264,7 @@ function checkWin() {
 // Function to display the win message
 function showWinMessage() {
     const timerElement = document.getElementById('timer');
-    timerElement.innerText = `You won in ${timeElapsed.toFixed(2)} seconds! Moves: ${moveCount}`;
+    timerElement.innerText = `You won in ${formatTime(timeElapsed, true)}! Moves: ${moveCount}`;
     timerElement.style.color = 'green';
 }
 
@@ -275,7 +304,7 @@ function loadLeaderboard() {
     table.innerHTML = `
         <tr>
             <th>Rank</th>
-            <th>Time (s)</th>
+            <th>Time</th>
             <th>Moves</th>
         </tr>
     `;
@@ -290,7 +319,7 @@ function loadLeaderboard() {
         const timeCell = row.insertCell(1);
         const movesCell = row.insertCell(2);
         rankCell.innerText = index + 1;
-        timeCell.innerText = score.time.toFixed(2);
+        timeCell.innerText = formatTime(score.time, true);
         movesCell.innerText = score.moves;
     });
 }
