@@ -1,20 +1,25 @@
-﻿let size = 3;
+﻿// script.js
+
+let size = 3; // Default puzzle size matching the default value in index.html
 let timerInterval;
 let timeElapsed = 0;
 let emptyX, emptyY;
 let tiles = [];
 let image;
-let leaderboardKey;
+let leaderboardKey = `leaderboard_${size}x${size}`; // Initialize leaderboard key with default size
 
+// Event listeners for start button and size input change
 document.getElementById('start-button').addEventListener('click', startGame);
 document.getElementById('size').addEventListener('change', onSizeChange);
 
+// Function to handle changes in puzzle size input
 function onSizeChange() {
     size = parseInt(document.getElementById('size').value);
     leaderboardKey = `leaderboard_${size}x${size}`;
     loadLeaderboard();
 }
 
+// Function to start the game
 function startGame() {
     size = parseInt(document.getElementById('size').value);
     leaderboardKey = `leaderboard_${size}x${size}`;
@@ -23,12 +28,14 @@ function startGame() {
     initGame();
 }
 
+// Function to initialize the game
 function initGame() {
     clearInterval(timerInterval);
     timeElapsed = 0;
     document.getElementById('timer').innerText = 'Time: 0s';
     document.getElementById('timer').style.color = 'black'; // Reset timer color
-    document.getElementById('puzzle').innerHTML = '';
+    const puzzle = document.getElementById('puzzle');
+    puzzle.innerHTML = '';
     tiles = [];
     emptyX = size - 1;
     emptyY = size - 1;
@@ -37,7 +44,6 @@ function initGame() {
     fullImage.src = image;
     fullImage.style.display = 'none';
 
-    const puzzle = document.getElementById('puzzle');
     const puzzleSize = 400;
     puzzle.style.width = puzzle.style.height = `${puzzleSize}px`;
 
@@ -77,6 +83,7 @@ function initGame() {
     loadLeaderboard();
 }
 
+// Function to shuffle tiles
 function shuffleTiles() {
     // Implement a shuffle algorithm
     for (let i = 0; i < 1000; i++) {
@@ -87,6 +94,7 @@ function shuffleTiles() {
     }
 }
 
+// Function to get neighboring tiles that can move into the empty space
 function getNeighbors(x, y) {
     const neighbors = [];
     tiles.forEach(tile => {
@@ -99,6 +107,7 @@ function getNeighbors(x, y) {
     return neighbors;
 }
 
+// Function to handle tile movement
 function moveTile(e) {
     const tile = e.target;
     const tileX = parseInt(tile.dataset.x);
@@ -116,6 +125,7 @@ function moveTile(e) {
     }
 }
 
+// Function to swap a tile with the empty space
 function swapTiles(tile) {
     const tempX = emptyX;
     const tempY = emptyY;
@@ -127,6 +137,7 @@ function swapTiles(tile) {
     tile.style.top = `${(tempY * 400) / size}px`;
 }
 
+// Function to start the game timer
 function startTimer() {
     timerInterval = setInterval(() => {
         timeElapsed++;
@@ -134,6 +145,7 @@ function startTimer() {
     }, 1000);
 }
 
+// Function to check if the puzzle is solved
 function checkWin() {
     for (const tile of tiles) {
         const x = parseInt(tile.dataset.x);
@@ -147,12 +159,14 @@ function checkWin() {
     return true;
 }
 
+// Function to display the win message
 function showWinMessage() {
     const timerElement = document.getElementById('timer');
     timerElement.innerText = `You won in ${timeElapsed} seconds!`;
     timerElement.style.color = 'green';
 }
 
+// Function to reveal the full image when the puzzle is solved
 function revealFullImage() {
     const fullImage = document.getElementById('full-image');
     fullImage.style.display = 'block';
@@ -166,9 +180,10 @@ function revealFullImage() {
     setTimeout(() => {
         const puzzle = document.getElementById('puzzle');
         puzzle.innerHTML = '';
-    }, 1000);
+    }, 1000); // Duration matches the CSS transition duration
 }
 
+// Function to save the player's time to the leaderboard
 function saveTime(time) {
     let times = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
     times.push(time);
@@ -177,6 +192,7 @@ function saveTime(time) {
     localStorage.setItem(leaderboardKey, JSON.stringify(times));
 }
 
+// Function to load and display the leaderboard
 function loadLeaderboard() {
     const times = JSON.parse(localStorage.getItem(leaderboardKey)) || [];
     const table = document.getElementById('leaderboard-table');
@@ -188,7 +204,7 @@ function loadLeaderboard() {
         </tr>
     `;
 
-    // Update the leaderboard title
+    // Update the leaderboard title with the current puzzle size
     const leaderboardTitle = document.getElementById('leaderboard-title');
     leaderboardTitle.innerText = `Leaderboard ${size}x${size}`;
 
@@ -201,3 +217,5 @@ function loadLeaderboard() {
     });
 }
 
+// Load the leaderboard when the page first loads
+loadLeaderboard();
