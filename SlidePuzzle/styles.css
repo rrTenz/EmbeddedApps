@@ -13,7 +13,7 @@ body {
     text-align: center;
     overflow-x: hidden; /* Prevent horizontal scroll */
     overflow-y: auto; /* Allow vertical scrolling if needed */
-    background-color: #f0f0f0; /* Light gray background */
+    /* Removed background-color to make it transparent */
     color: #333; /* Dark text color */
 }
 
@@ -79,7 +79,7 @@ h1 {
     margin: 20px auto;
     aspect-ratio: 1 / 1; /* Enforce square aspect ratio */
     overflow: hidden; /* Hide any overflow */
-    background-color: #fff;
+    /* Removed background-color to make it transparent */
     border: 1px solid #ccc;
     border-radius: 5px;
 }
