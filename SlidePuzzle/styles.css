@@ -13,7 +13,7 @@ body {
     text-align: center;
     overflow-x: hidden; /* Prevent horizontal scroll */
     overflow-y: auto; /* Allow vertical scrolling if needed */
-    /* Removed background-color to make it transparent */
+    /* Background is transparent as per previous request */
     color: #333; /* Dark text color */
 }
 
@@ -52,7 +52,8 @@ h1 {
     }
 
     #controls button {
-        margin-top: 20px;
+        display: block; /* Center the button */
+        margin: 20px auto; /* Center horizontally and add vertical margin */
         padding: 10px 20px;
         font-size: 16px;
         cursor: pointer;
@@ -65,13 +66,6 @@ h1 {
     padding: 10px;
 }
 
-#timer,
-#move-counter {
-    font-size: 18px;
-    margin-top: 10px;
-}
-
-/* Puzzle container */
 #puzzle-container {
     position: relative;
     width: 100%;
@@ -79,7 +73,7 @@ h1 {
     margin: 20px auto;
     aspect-ratio: 1 / 1; /* Enforce square aspect ratio */
     overflow: hidden; /* Hide any overflow */
-    /* Removed background-color to make it transparent */
+    /* Background is transparent as per previous request */
     border: 1px solid #ccc;
     border-radius: 5px;
 }
@@ -101,6 +95,15 @@ h1 {
     border: 1px solid #ccc;
     cursor: pointer;
     overflow: hidden;
+}
+
+/* Timer and Move Counter Styles */
+#timer,
+#move-counter {
+    font-size: 18px;
+    margin-top: 10px;
+    /* Center the text */
+    text-align: center;
 }
 
 /* Leaderboard section */
