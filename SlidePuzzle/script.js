@@ -124,8 +124,8 @@ function initGame() {
             // Set background size to the total size of the puzzle
             tile.style.backgroundSize = `${size * 100}% ${size * 100}%`;
 
-            // Set background position
-            tile.style.backgroundPosition = `-${(x * 100) / (size - 1)}% -${(y * 100) / (size - 1)}%`;
+            // Corrected background position calculation
+            tile.style.backgroundPosition = `-${(x * 100) / size}% -${(y * 100) / size}%`;
 
             // Store the original position for win checking
             tile.dataset.correctX = x;
