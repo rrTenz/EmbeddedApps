@@ -7,23 +7,14 @@ let moveCount = 0; // Initialize move counter
 let emptyX, emptyY;
 let tiles = [];
 let image;
+let season;
+let imagesData = {}; // To store the parsed images.json data
 let leaderboardKey = `leaderboard_${size}x${size}`; // Initialize leaderboard key with default size
 
-// Array of image filenames
-const imageFilenames = [
-    'Season 47 Logo.png',
-    'Season 46 Logo.png',
-    'Season 45 Logo.png',
-    // Add more filenames as needed
-];
-
-// Function to format the filenames
+// Function to format the image filenames
 function formatImageName(filename) {
-    // Remove the directory path if present
-    let name = filename.substring(filename.lastIndexOf('/') + 1);
-
     // Remove the file extension
-    name = name.substring(0, name.lastIndexOf('.')) || name;
+    let name = filename.substring(0, filename.lastIndexOf('.')) || filename;
 
     // Replace underscores and hyphens with spaces
     name = name.replace(/[-_]/g, ' ');
@@ -34,21 +25,66 @@ function formatImageName(filename) {
     return name;
 }
 
-// Function to populate the image select dropdown
+// Function to fetch and load images data from images.json
+function loadImagesData() {
+    fetch('images.json')
+        .then(response => response.json())
+        .then(data => {
+            imagesData = data;
+            populateSeasonSelect();
+        })
+        .catch(error => {
+            console.error('Error loading images data:', error);
+        });
+}
+
+// Function to populate the season select dropdown
+function populateSeasonSelect() {
+    const seasonSelect = document.getElementById('season-select');
+    seasonSelect.innerHTML = ''; // Clear existing options
+
+    const seasons = Object.keys(imagesData).sort(); // Get and sort the seasons
+
+    seasons.forEach(seasonValue => {
+        const option = document.createElement('option');
+        option.value = seasonValue;
+        option.text = `Season ${seasonValue}`;
+        seasonSelect.appendChild(option);
+    });
+
+    // Set default selected season
+    season = seasonSelect.value;
+
+    // Populate image select dropdown based on the selected season
+    populateImageSelect();
+
+    // Add event listener for season change
+    seasonSelect.addEventListener('change', onSeasonChange);
+}
+
+// Function to handle season change
+function onSeasonChange() {
+    season = document.getElementById('season-select').value;
+    populateImageSelect();
+}
+
+// Function to populate the image select dropdown based on selected season
 function populateImageSelect() {
     const imageSelect = document.getElementById('image-select');
     imageSelect.innerHTML = ''; // Clear existing options
 
-    imageFilenames.forEach(filename => {
+    const images = imagesData[season];
+
+    images.forEach(filename => {
         const option = document.createElement('option');
-        option.value = filename; // Use the exact filename, including spaces
+        option.value = filename;
         option.text = formatImageName(filename);
         imageSelect.appendChild(option);
     });
 }
 
-// Call the function to populate the dropdown when the page loads
-populateImageSelect();
+// Call the function to load images data when the page loads
+loadImagesData();
 
 // Event listeners for start button and size input change
 document.getElementById('start-button').addEventListener('click', startGame);
@@ -79,6 +115,7 @@ function startGame() {
     leaderboardKey = `leaderboard_${size}x${size}`;
     const imageSelect = document.getElementById('image-select');
     image = imageSelect.value;
+    season = document.getElementById('season-select').value;
     initGame();
 }
 
@@ -99,7 +136,8 @@ function initGame() {
     console.log(`Empty tile position initialized at: (${emptyX}, ${emptyY})`);
 
     const fullImage = document.getElementById('full-image');
-    const encodedImage = encodeURI(image);
+    const imagePath = `Images/${season}/${image}`;
+    const encodedImage = encodeURI(imagePath);
     fullImage.src = encodedImage; // Use encoded URI
     fullImage.style.display = 'none';
 
@@ -390,8 +428,6 @@ adjustPuzzleContainerSize();
 // Load the leaderboard when the page first loads
 loadLeaderboard();
 
-// ... Existing code ...
-
 // Add an event listener for the reset button
 document.getElementById('reset-leaderboard-button').addEventListener('click', resetLeaderboard);
 
@@ -425,4 +461,3 @@ function resetLeaderboard() {
         }
     };
 }
-
