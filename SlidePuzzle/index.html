@@ -3,99 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Slide Puzzle Game</title>
-    <style>
-        /* Updated CSS to improve responsiveness and remove unwanted scroll bars */
-        html, body {
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden; /* Prevent horizontal scroll */
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            overflow-y: scroll; /* Allow vertical scrolling if needed */
-        }
-
-        #game-container {
-            margin: 20px auto;
-            max-width: 100%;
-        }
-
-        #puzzle-container {
-            position: relative;
-            width: 100%;
-            max-width: 400px; /* Maximum width for larger screens */
-            height: 0;
-            padding-bottom: 100%; /* Maintain square aspect ratio */
-            margin: 0 auto;
-        }
-
-        #puzzle, #full-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .tile {
-            position: absolute;
-            z-index: 2;
-            transition: opacity 1s;
-            background-size: 100% 100%; /* Adjusted to fit container */
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-            cursor: pointer;
-        }
-
-        #controls {
-            margin-top: 20px;
-        }
-
-        #leaderboard {
-            margin-top: 20px;
-        }
-
-        table {
-            margin: 0 auto;
-            border-collapse: collapse;
-            width: 80%; /* Adjust table width for better mobile display */
-        }
-
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-        }
-
-        #version {
-            font-size: 14px;
-            color: #555;
-        }
-
-        /* Media Query for Small Screens */
-        @media (max-width: 600px) {
-            #controls, #leaderboard {
-                width: 100%;
-                padding: 0 10px;
-            }
-
-                #controls label, #controls input, #controls select, #controls button {
-                    display: block;
-                    width: 100%;
-                    margin: 5px 0;
-                }
-
-            table {
-                width: 100%;
-            }
-        }
-    </style>
+    <!-- Added viewport meta tag for responsiveness -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
     <h1>Slide Puzzle Game</h1>
-    <div id="version">Version: 1.0.7</div>
+    <div id="version">Version: 1.0.8</div>
 
     <div id="controls">
         <label for="size">Select Puzzle Size:</label>

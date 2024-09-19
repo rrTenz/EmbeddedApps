@@ -129,7 +129,7 @@ function initGame() {
     loadLeaderboard();
 }
 
-// Function to handle tile movement (This was missing)
+// Function to handle tile movement
 function moveTile(e) {
     const tile = e.target;
     const tileX = parseInt(tile.dataset.x);
@@ -201,6 +201,10 @@ function checkWin() {
         if (x !== correctX || y !== correctY) {
             return false;
         }
+    }
+    // Check if empty space is in the bottom-right corner
+    if (emptyX !== size - 1 || emptyY !== size - 1) {
+        return false;
     }
     return true;
 }
