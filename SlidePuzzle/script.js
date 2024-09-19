@@ -8,6 +8,44 @@ let tiles = [];
 let image;
 let leaderboardKey = `leaderboard_${size}x${size}`; // Initialize leaderboard key with default size
 
+// Array of image filenames
+const imageFilenames = [
+    'season 45 logo.png',
+    'season 46 logo.png',
+    'season 47 logo.png',
+    // Add more filenames as needed
+];
+
+// Function to format the filenames
+function formatImageName(filename) {
+    // Remove the file extension
+    let name = filename.substring(0, filename.lastIndexOf('.')) || filename;
+
+    // Replace hyphens and underscores with spaces
+    name = name.replace(/[-_]/g, ' ');
+
+    // Capitalize each word
+    name = name.replace(/\b\w/g, char => char.toUpperCase());
+
+    return name;
+}
+
+// Function to populate the image select dropdown
+function populateImageSelect() {
+    const imageSelect = document.getElementById('image-select');
+    imageSelect.innerHTML = ''; // Clear existing options
+
+    imageFilenames.forEach(filename => {
+        const option = document.createElement('option');
+        option.value = filename; // Adjust path if images are in a subdirectory
+        option.text = formatImageName(filename);
+        imageSelect.appendChild(option);
+    });
+}
+
+// Call the function to populate the dropdown when the page loads
+populateImageSelect();
+
 // Event listeners for start button and size input change
 document.getElementById('start-button').addEventListener('click', startGame);
 document.getElementById('size').addEventListener('change', onSizeChange);
@@ -44,8 +82,8 @@ function initGame() {
     fullImage.src = image;
     fullImage.style.display = 'none';
 
-    const puzzleSize = 400;
-    puzzle.style.width = puzzle.style.height = `${puzzleSize}px`;
+    const puzzleContainer = document.getElementById('puzzle-container');
+    const puzzleSize = puzzleContainer.offsetWidth; // Get the width of the container
 
     // Create tiles
     for (let y = 0; y < size; y++) {
@@ -53,16 +91,18 @@ function initGame() {
             if (x === emptyX && y === emptyY) continue; // Skip the empty tile
             const tile = document.createElement('div');
             tile.classList.add('tile');
-            tile.style.width = tile.style.height = `${puzzleSize / size}px`;
-            tile.style.left = `${(x * puzzleSize) / size}px`;
-            tile.style.top = `${(y * puzzleSize) / size}px`;
+
+            // Calculate tile size and position
+            tile.style.width = tile.style.height = `${(100 / size)}%`;
+            tile.style.left = `${(x * 100) / size}%`;
+            tile.style.top = `${(y * 100) / size}%`;
             tile.style.backgroundImage = `url(${image})`;
 
-            // Set background size to the size of the full puzzle
-            tile.style.backgroundSize = `${puzzleSize}px ${puzzleSize}px`;
+            // Set background size to the total size of the puzzle
+            tile.style.backgroundSize = `${size * 100}% ${size * 100}%`;
 
-            // Set background position to show the correct portion of the image
-            tile.style.backgroundPosition = `-${(x * puzzleSize) / size}px -${(y * puzzleSize) / size}px`;
+            // Set background position
+            tile.style.backgroundPosition = `-${(x * 100) / (size - 1)}% -${(y * 100) / (size - 1)}%`;
 
             // Store the original position for win checking
             tile.dataset.correctX = x;
@@ -133,8 +173,8 @@ function swapTiles(tile) {
     emptyY = parseInt(tile.dataset.y);
     tile.dataset.x = tempX;
     tile.dataset.y = tempY;
-    tile.style.left = `${(tempX * 400) / size}px`;
-    tile.style.top = `${(tempY * 400) / size}px`;
+    tile.style.left = `${(tempX * 100) / size}%`;
+    tile.style.top = `${(tempY * 100) / size}%`;
 }
 
 // Function to start the game timer
