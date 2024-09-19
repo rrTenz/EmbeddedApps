@@ -126,7 +126,7 @@ function initGame() {
             tile.style.backgroundSize = `${size * 100}% ${size * 100}%`;
 
             // Corrected background position calculation
-            tile.style.backgroundPosition = `-${x * (100 / (size - 1))}% -${y * (100 / (size - 1))}%`;
+            tile.style.backgroundPosition = `-${x * 100}% -${y * 100}%`;
 
             // Store the original position for win checking
             tile.dataset.correctX = x;
