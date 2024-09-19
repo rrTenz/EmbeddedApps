@@ -390,13 +390,39 @@ adjustPuzzleContainerSize();
 // Load the leaderboard when the page first loads
 loadLeaderboard();
 
+// ... Existing code ...
+
 // Add an event listener for the reset button
 document.getElementById('reset-leaderboard-button').addEventListener('click', resetLeaderboard);
 
 // Function to reset the leaderboard
 function resetLeaderboard() {
-    if (confirm('Are you sure you want to reset the leaderboard? This action cannot be undone.')) {
+    // Show the confirmation modal
+    const modal = document.getElementById('confirmation-modal');
+    modal.style.display = 'block';
+
+    // Get the buttons
+    const confirmBtn = document.getElementById('confirm-reset');
+    const cancelBtn = document.getElementById('cancel-reset');
+
+    // Add event listeners for the buttons
+    confirmBtn.onclick = function () {
+        // User confirmed reset
+        modal.style.display = 'none';
         localStorage.removeItem(leaderboardKey);
         loadLeaderboard();
-    }
+    };
+
+    cancelBtn.onclick = function () {
+        // User canceled reset
+        modal.style.display = 'none';
+    };
+
+    // Close the modal when the user clicks outside of the modal content
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    };
 }
+

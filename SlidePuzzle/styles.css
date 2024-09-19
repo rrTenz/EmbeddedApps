@@ -1,35 +1,91 @@
 ﻿/* styles.css */
 
-/* Updated CSS to improve responsiveness and ensure square aspect ratio */
-html, body {
+/* Reset default browser styles */
+* {
     margin: 0;
     padding: 0;
-    overflow-x: hidden; /* Prevent horizontal scroll */
+    box-sizing: border-box;
 }
 
+/* Overall body styles */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    overflow-y: scroll; /* Allow vertical scrolling if needed */
+    overflow-x: hidden; /* Prevent horizontal scroll */
+    overflow-y: auto; /* Allow vertical scrolling if needed */
+    background-color: #f0f0f0; /* Light gray background */
+    color: #333; /* Dark text color */
 }
 
+/* Heading styles */
+h1 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 2em;
+}
+
+/* Version number style */
+#version {
+    font-size: 14px;
+    color: #555;
+}
+
+/* Controls section */
+#controls {
+    margin: 20px auto;
+    max-width: 600px;
+    text-align: left;
+}
+
+    #controls label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    #controls input[type="number"],
+    #controls select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        font-size: 16px;
+    }
+
+    #controls button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+/* Game container */
 #game-container {
     margin: 20px auto;
-    max-width: 100%;
-    overflow: hidden; /* Prevent scroll bars */
+    max-width: 600px;
+    padding: 10px;
 }
 
+#timer,
+#move-counter {
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+/* Puzzle container */
 #puzzle-container {
     position: relative;
     width: 100%;
     max-width: 400px; /* Adjust as needed */
+    margin: 20px auto;
     aspect-ratio: 1 / 1; /* Enforce square aspect ratio */
-    margin: 0 auto;
     overflow: hidden; /* Hide any overflow */
-    /* Removed height and padding-bottom */
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
-#puzzle, #full-image {
+#puzzle,
+#full-image {
     position: absolute;
     top: 0;
     left: 0;
@@ -41,60 +97,109 @@ body {
     position: absolute;
     z-index: 2;
     transition: opacity 1s;
-    background-size: 100% 100%; /* Adjusted to fit container */
+    background-size: cover; /* Adjusted to fit container */
     border: 1px solid #ccc;
-    box-sizing: border-box;
     cursor: pointer;
     overflow: hidden;
 }
 
-#controls {
-    margin-top: 20px;
-}
-
+/* Leaderboard section */
 #leaderboard {
-    margin-top: 20px;
+    margin: 40px auto;
+    max-width: 600px;
+    text-align: center;
 }
 
-table {
+#leaderboard-title {
+    margin-bottom: 20px;
+}
+
+#leaderboard-table {
     margin: 0 auto;
     border-collapse: collapse;
-    width: 80%; /* Adjust table width for better mobile display */
+    width: 100%;
 }
 
-th, td {
-    border: 1px solid #ccc;
-    padding: 8px;
-}
-
-#version {
-    font-size: 14px;
-    color: #555;
-}
-
-#timer, #move-counter {
-    font-size: 18px;
-    margin-top: 10px;
-}
-
-#puzzle-container {
-    margin-top: 10px;
-}
-
-/* Media Query for Small Screens */
-@media (max-width: 600px) {
-    #controls, #leaderboard {
-        width: 100%;
-        padding: 0 10px;
+    #leaderboard-table th,
+    #leaderboard-table td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        font-size: 16px;
     }
 
-        #controls label, #controls input, #controls select, #controls button {
-            display: block;
-            width: 100%;
-            margin: 5px 0;
-        }
+    #leaderboard-table th {
+        background-color: #f9f9f9;
+    }
 
-    table {
+#reset-leaderboard-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* Styles for the confirmation modal */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.5); /* Black with opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* Centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 400px; /* Max width */
+    border-radius: 5px;
+}
+
+    .modal-content p {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    .modal-content button {
+        margin: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    #controls,
+    #leaderboard {
+        width: 90%;
+        padding: 0 5%;
+    }
+
+    #puzzle-container {
+        max-width: 90%;
+    }
+
+    #controls label,
+    #controls input,
+    #controls select,
+    #controls button {
         width: 100%;
+        margin: 5px 0;
+    }
+
+    #leaderboard-table th,
+    #leaderboard-table td {
+        padding: 8px;
+    }
+
+    .modal-content {
+        width: 90%;
+        margin-top: 40%;
     }
 }
