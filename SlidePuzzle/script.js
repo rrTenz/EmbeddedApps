@@ -8,7 +8,7 @@ let emptyX, emptyY;
 let tiles = [];
 let image;
 let season;
-let imagesData = {}; // To store the parsed images.json data
+let imagesData = []; // Now an array to maintain order
 let leaderboardKey = `leaderboard_${size}x${size}`; // Initialize leaderboard key with default size
 
 // Function to format the image filenames
@@ -30,7 +30,7 @@ function loadImagesData() {
     fetch('images.json')
         .then(response => response.json())
         .then(data => {
-            imagesData = data;
+            imagesData = data; // Now an array
             populateSeasonSelect();
         })
         .catch(error => {
@@ -43,12 +43,10 @@ function populateSeasonSelect() {
     const seasonSelect = document.getElementById('season-select');
     seasonSelect.innerHTML = ''; // Clear existing options
 
-    const seasons = Object.keys(imagesData).sort(); // Get and sort the seasons
-
-    seasons.forEach(seasonValue => {
+    imagesData.forEach(seasonData => {
         const option = document.createElement('option');
-        option.value = seasonValue;
-        option.text = `Season ${seasonValue}`;
+        option.value = seasonData.season;
+        option.text = seasonData.season; // Use the season name as is
         seasonSelect.appendChild(option);
     });
 
@@ -73,14 +71,19 @@ function populateImageSelect() {
     const imageSelect = document.getElementById('image-select');
     imageSelect.innerHTML = ''; // Clear existing options
 
-    const images = imagesData[season];
+    // Find the selected season's data
+    const seasonData = imagesData.find(s => s.season === season);
 
-    images.forEach(filename => {
-        const option = document.createElement('option');
-        option.value = filename;
-        option.text = formatImageName(filename);
-        imageSelect.appendChild(option);
-    });
+    if (seasonData) {
+        const images = seasonData.images;
+
+        images.forEach(filename => {
+            const option = document.createElement('option');
+            option.value = filename;
+            option.text = formatImageName(filename);
+            imageSelect.appendChild(option);
+        });
+    }
 }
 
 // Call the function to load images data when the page loads
