@@ -1,0 +1,36 @@
+﻿<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <canvas id="tetris" width="320" height="640"></canvas>
+        <div class="controls">
+            <button id="left-btn">⭠ Left</button>
+            <button id="rotate-btn">↻ Rotate</button>
+            <button id="right-btn">⭢ Right</button>
+            <button id="down-btn">⬇ Down</button>
+        </div>
+        <button id="pause-btn">⏸ Pause</button>
+        <div class="info">
+            <div>Score: <span id="score">0</span></div>
+            <div>High Score: <span id="high-score">0</span></div>
+        </div>
+        <!-- Game Over Overlay -->
+        <div class="game-over" id="game-over">
+            <div>Game Over!</div>
+            <div>Your Score: <span id="final-score">0</span></div>
+            <button id="restart-btn">🔄 Restart</button>
+        </div>
+    </div>
+    <!-- Include Hammer.js for touch controls -->
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
