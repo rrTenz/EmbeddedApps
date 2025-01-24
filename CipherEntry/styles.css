@@ -88,4 +88,10 @@ html, body {
     display: block;
     margin: 10px auto;
   }
+
+  .instructions {
+    text-align: center;
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
   
