@@ -54,36 +54,42 @@ const runeWords = [
   const copyButton      = document.getElementById("copyButton");
   const goButton        = document.getElementById("goButton");
   
-  // Build each line: Runes + input boxes
+  // Build each line: runes on the left, boxes on the right
   for (let i = 0; i < runeWords.length; i++) {
+    // Outer container for a single line
     const lineDiv = document.createElement("div");
     lineDiv.className = "puzzle-line";
   
-    const runesSpan = document.createElement("span");
-    runesSpan.className = "runes-for-word";
-    runesSpan.textContent = runeWords[i];
-    lineDiv.appendChild(runesSpan);
+    // 1) Runes column (left side, right aligned)
+    const runesDiv = document.createElement("div");
+    runesDiv.className = "runes-column";
+    runesDiv.textContent = runeWords[i]; // put the runic text here
   
-    const groupSpan = document.createElement("span");
-    groupSpan.className = "answer-group";
+    // 2) Boxes column (right side, left aligned)
+    const boxesDiv = document.createElement("div");
+    boxesDiv.className = "boxes-column";
   
+    // Add the input boxes
     for (let j = 0; j < solutionWords[i].length; j++) {
       const letterBox = document.createElement("input");
       letterBox.type = "text";
       letterBox.maxLength = 1;
       letterBox.className = "answer-box";
-      groupSpan.appendChild(letterBox);
+      boxesDiv.appendChild(letterBox);
     }
   
-    lineDiv.appendChild(groupSpan);
+    // Place runes on left, boxes on right
+    lineDiv.appendChild(runesDiv);
+    lineDiv.appendChild(boxesDiv);
+  
+    // Add this line to the main container
     answerContainer.appendChild(lineDiv);
   }
   
   // Check answer logic
   checkButton.addEventListener("click", () => {
-    const allInputs = document.querySelectorAll(".answer-box");
     let userLetters = "";
-  
+    const allInputs = document.querySelectorAll(".answer-box");
     allInputs.forEach(input => {
       userLetters += input.value;
     });
@@ -97,15 +103,16 @@ const runeWords = [
       // Correct
       resultPara.textContent =
         "Correct! Go to https://www.survivorgeek.app/apps/36-piece-puzzle-correct to cast your vote.";
-  
-      // Make these buttons visible
+      // Reveal the Copy + Go buttons
       copyButton.classList.remove("hidden");
       goButton.classList.remove("hidden");
-  
     } else {
       // Incorrect
       resultPara.textContent = "That answer isn't correct. Try again!";
     }
+  
+    // Smoothly scroll the result into view
+    resultPara.scrollIntoView({ behavior: "smooth" });
   });
   
   // Copy Link button
@@ -117,7 +124,6 @@ const runeWords = [
         .then(() => alert("Link copied: " + linkToCopy))
         .catch(err => console.error("Failed to copy: ", err));
     } else {
-      // Fallback for older browsers
       const textArea = document.createElement("textarea");
       textArea.value = linkToCopy;
       textArea.style.position = "absolute";

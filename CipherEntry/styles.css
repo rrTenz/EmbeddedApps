@@ -1,4 +1,4 @@
-﻿/* 1) Ensure the HTML and body occupy the full viewport */
+﻿/* Make body fill screen, show background */
 html, body {
     width: 100%;
     height: 100%;
@@ -6,28 +6,31 @@ html, body {
     padding: 0;
   }
   
-  /* 2) Body styling:
-     - Force background to fill 100% width AND 100% height
-     - Will distort if aspect ratio differs.
-     - "background-attachment: fixed;" is optional (makes image stay in place on scroll).
-     - Some padding so content isn't flush with edges.
-  */
   body {
     font-family: Arial, sans-serif;
+    /* Force background to fill 100% width AND 100% height */
     background: url("background.png") center center no-repeat;
-    background-size: 100% 100%;
-    background-attachment: fixed;
+    background-size: 100% 100%; /* Will distort if aspect ratio differs */
+    background-attachment: fixed; 
     color: #111;
     padding: 20px;
   }
   
-  /* Title styling */
+  /* Title */
   h2 {
     text-align: center;
     margin-bottom: 1rem;
+    font-size: 2rem;
   }
   
-  /* Top runes message */
+  /* Optional instructions styling */
+  .instructions {
+    text-align: center;
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+  
+  /* Runes message at the top */
   .runes-top {
     font-size: 1.2em;
     margin-bottom: 1em;
@@ -35,7 +38,7 @@ html, body {
     font-weight: bold;
   }
   
-  /* The embedded puzzle's iframe */
+  /* Embedded puzzle iframe */
   .puzzle-embed {
     width: 100%;
     height: 575px;
@@ -43,26 +46,36 @@ html, body {
     border: none;
   }
   
-  /* Puzzle lines, runes, etc. */
+  /* 
+     Puzzle line: we want a two-column layout, 
+     centered on the page, with runes on left, boxes on right.
+  */
   .puzzle-line {
     display: flex;
     align-items: center;
-    justify-content: center; /* center horizontally */
-    margin: 8px 0;
+    /* Center the entire line by restricting width, margin auto */
+    max-width: 600px;
+    width: 100%;
+    margin: 8px auto;
   }
   
-  .runes-for-word {
-    min-width: 110px;
-    font-weight: bold;
-    margin-right: 8px;
+  /* Runes column on the left, right-aligned text */
+  .runes-column {
+    text-align: right;
+    width: 50%; /* half the line */
     font-size: 1.5em; /* bigger runes */
-    text-align: center;
+    font-weight: bold;
+    padding-right: 1rem; /* spacing to the center line */
   }
   
-  .answer-group {
-    display: inline-block;
+  /* Boxes column on the right, left-aligned text */
+  .boxes-column {
+    text-align: left;
+    width: 50%;
+    padding-left: 1rem; /* spacing from the center line */
   }
   
+  /* The letter input boxes themselves */
   .answer-box {
     width: 2em;
     text-align: center;
@@ -77,21 +90,14 @@ html, body {
     text-align: center; 
   }
   
-  /* Hide or show success buttons 
-     !important ensures this wins over .centered-btn. */
+  /* Hide or show success buttons */
   .hidden {
-    display: none !important;
+    display: none !important; /* ensure it wins over any other display rule */
   }
   
-  /* A helper class to center the buttons */
+  /* Center the check/copy/go buttons horizontally */
   .centered-btn {
     display: block;
     margin: 10px auto;
-  }
-
-  .instructions {
-    text-align: center;
-    font-style: italic;
-    margin-bottom: 1rem;
   }
   
