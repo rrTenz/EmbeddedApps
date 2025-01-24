@@ -102,7 +102,7 @@ const runeWords = [
     if (normalizedUser === normalizedSoln) {
       // Correct
       resultPara.textContent =
-        "Correct! Go to https://www.survivorgeek.app/apps/36-piece-puzzle-correct to cast your vote.";
+        "Correct! Go to https://www.survivorgeek.app/apps/rune-cipher-puzzle-correct to cast your vote.";
       // Reveal the Copy + Go buttons
       copyButton.classList.remove("hidden");
       goButton.classList.remove("hidden");
@@ -117,7 +117,7 @@ const runeWords = [
   
   // Copy Link button
   copyButton.addEventListener("click", () => {
-    const linkToCopy = "https://www.survivorgeek.app/apps/36-piece-puzzle-correct";
+    const linkToCopy = "https://www.survivorgeek.app/apps/rune-cipher-puzzle-correct";
   
     if (navigator.clipboard && window.isSecureContext) {
       navigator.clipboard.writeText(linkToCopy)
@@ -142,6 +142,6 @@ const runeWords = [
   
   // Go to Link button
   goButton.addEventListener("click", () => {
-    window.open("https://www.survivorgeek.app/apps/36-piece-puzzle-correct", "_blank");
+    window.open("https://www.survivorgeek.app/apps/rune-cipher-puzzle-correct", "_blank");
   });
   
