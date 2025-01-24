@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solitaire</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="game-container">
+    <div id="new-game-modal" class="modal">
+      <div class="modal-content">
+        <h2>New Game</h2>
+        <p>How many cards would you like to flip?</p>
+        <button onclick="startGame(1)">Flip 1 card</button>
+        <button onclick="startGame(3)">Flip 3 cards</button>
+      </div>
+    </div>
+
+    <div id="board">
+      <!-- Solitaire board and cards will be dynamically created here -->
+    </div>
+    
+    <div id="controls">
+      <button id="restart-btn" onclick="showNewGameModal()">Restart Game</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
