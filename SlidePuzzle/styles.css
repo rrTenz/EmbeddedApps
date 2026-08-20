@@ -43,7 +43,11 @@ h1 {
     line-height: 1.1;
     letter-spacing: -0.025em;
 
-    color: #2d2d2d;
+    color: #ffffff;
+
+    text-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.65),
+        0 1px 2px rgba(0, 0, 0, 0.75);
 }
 
 #version {
@@ -54,7 +58,10 @@ h1 {
     font-size: 12px;
     font-weight: 400;
 
-    color: #777;
+    color: rgba(255, 255, 255, 0.92);
+
+    text-shadow:
+        0 1px 4px rgba(0, 0, 0, 0.75);
 }
 
 
@@ -294,9 +301,12 @@ h1 {
     font-size: 17px;
     font-weight: 600;
 
-    color: #333;
+    color: #ffffff;
 
     text-align: center;
+
+    text-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.8);
 }
 
 
