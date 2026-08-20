@@ -1,5 +1,83 @@
 [
     {
+        "season": "50 - In the Hands of the Fans",
+        "images": [
+            "logo.png",
+            "Angelina Keeley.webp",
+            "Aubry Bracco.webp",
+            "Charlie Davis.webp",
+            "Chrissy Hofbeck.webp",
+            "Christian Hubicki.webp",
+            "Cirie Fields.webp",
+            "Coach Wade.webp",
+            "Colby Donaldson.webp",
+            "Dee Valladares.webp",
+            "Emily Flippen.webp",
+            "Genevieve Mushaluk.webp",
+            "Jenna Lewis-Dougherty.webp",
+            "Joe Hunter.webp",
+            "Jonathan Young.webp",
+            "Kamilla Karthigesu.webp",
+            "Kyle Fraser.webp",
+            "Mike White.webp",
+            "Ozzy Lusth.webp",
+            "Q Burdette.webp",
+            "Rick Devens.webp",
+            "Rizo Velovic.webp",
+            "Savannah Louie.webp",
+            "Stephenie LaGrossa Kendrick.webp",
+            "Tiffany Nicole Ervin.webp"
+        ]
+    },
+    {
+        "season": "49 - Season 49",
+        "images": [
+            "logo.png",
+            "Alex Moore.webp",
+            "Annie Davis.webp",
+            "Jake Latimer.webp",
+            "Jason Treul.webp",
+            "Jawan Pitts.webp",
+            "Jeremiah Ing.webp",
+            "Kristina Mills.webp",
+            "Matt Williams.webp",
+            "MC Chukwujekwu.webp",
+            "Nate Moore.webp",
+            "Nicole Mazullo.webp",
+            "Rizo Velovic.webp",
+            "Sage Ahrens-Nichols.webp",
+            "Savannah Louie.webp",
+            "Shannon Fairweather.webp",
+            "Sophi Balerdi.webp",
+            "Sophie Segreti.webp",
+            "Steven Ramm.webp"
+        ]
+    },
+    {
+        "season": "48 - Season 48",
+        "images": [
+            "logo.png",
+            "Bianca Roses.webp",
+            "Cedrek McFadden.webp",
+            "Charity Nelms.webp",
+            "Chrissy Sarnowsky.webp",
+            "David Kinne.webp",
+            "Eva Erickson.webp",
+            "Joe Hunter.webp",
+            "Justin Pioppi.webp",
+            "Kamilla Karthigesu.webp",
+            "Kevin Leung.webp",
+            "Kyle Fraser.webp",
+            "Mary Zheng.webp",
+            "Mitch Guerra.webp",
+            "Saiounia Hughley.webp",
+            "Shauhin Davari.webp",
+            "Star Toomey.webp",
+            "Stephanie Berger.webp",
+            "Thomas Krottinger.webp"
+        ]
+    },
+    {
         "season": "47 - Season 47",
         "images": [
             "Logo.png",
@@ -18,9 +96,9 @@
             "S47_Sierra_Wright.png",
             "S47_Sol_Yi.png",
             "S47_Sue_Smey.png",
-            "S47_TK_Foster.png",
             "S47_Teeny_Chirichillo.png",
-            "S47_Tiyana_Hallums.png"
+            "S47_Tiyana_Hallums.png",
+            "S47_TK_Foster.png"
         ]
     },
     {
@@ -159,7 +237,7 @@
             "JD Robinson.png",
             "Liana Wallace.png",
             "Naseer Muttalif.png",
-            "Ricard Foy\u00e9.png",
+            "Ricard Foyé.png",
             "Sara Wilson.png",
             "Shan Smith.png",
             "Sydney Segal.png",
@@ -307,9 +385,9 @@
             "Cole Medders.png",
             "Desi Williams.png",
             "Devon Pinto.png",
-            "JP Hilsabeck.png",
             "Jessica Johnston.png",
             "Joe Mena.png",
+            "JP Hilsabeck.png",
             "Katrina Radke.png",
             "Lauren Rimmer.png",
             "Mike Zahalsky.png",
@@ -372,7 +450,7 @@
         ]
     },
     {
-        "season": "32 - Kao\u0302h Ro\u0304ng",
+        "season": "32 - Kaôh Rōng",
         "images": [
             "Logo.png",
             "Alecia Holden.png",
@@ -482,8 +560,8 @@
             "Jefra Bland.png",
             "Jeremiah Wood.png",
             "Kass McQuillen.png",
-            "LJ McKanas.png",
             "Lindsey Ogle.png",
+            "LJ McKanas.png",
             "Morgan McLeod.png",
             "Sarah Lacina.png",
             "Spencer Bledsoe.png",
@@ -1001,8 +1079,8 @@
             "Rupert Boneham.png",
             "Ryan Opray.png",
             "Ryan Shoulders.png",
-            "Sandra Diaz-Twine-Pearl Islands.png",
             "Sandra Diaz-Twine.png",
+            "Sandra Diaz-Twine-Pearl Islands.png",
             "Shawn Cohen.png",
             "Tijuana Bradley.png",
             "Trish Dunn.png"

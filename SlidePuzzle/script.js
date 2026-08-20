@@ -27,7 +27,7 @@ function formatImageName(filename) {
 
 // Function to fetch and load images data from images.json
 function loadImagesData() {
-    fetch('images.json')
+    fetch('images.json', { cache: 'no-store' })
         .then(response => response.json())
         .then(data => {
             imagesData = data; // Now an array

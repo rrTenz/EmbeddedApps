@@ -1,208 +1,602 @@
 ﻿/* styles.css */
 
-/* Reset default browser styles */
+/* ============================================================
+   GLOBAL RESET
+   ============================================================ */
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Overall body styles */
+html {
+    width: 100%;
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #2f2f2f;
     text-align: center;
-    overflow-x: hidden; /* Prevent horizontal scroll */
-    overflow-y: auto; /* Allow vertical scrolling if needed */
-    /* Background is transparent as per previous request */
-    color: #333; /* Dark text color */
+
+    /* Important for embedding on Survivor Geek */
+    background: transparent;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    padding: 14px 16px 32px;
+
+    line-height: 1.4;
 }
 
-/* Heading styles */
+
+/* ============================================================
+   PAGE HEADER
+   ============================================================ */
+
 h1 {
-    margin-top: 20px;
-    margin-bottom: 10px;
-    font-size: 2em;
+    margin: 0 auto 2px;
+
+    font-size: clamp(1.9rem, 3vw, 2.3rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+
+    color: #2d2d2d;
 }
 
-/* Version number style */
 #version {
-    font-size: 14px;
-    color: #555;
+    display: inline-block;
+
+    margin-top: 4px;
+
+    font-size: 12px;
+    font-weight: 400;
+
+    color: #777;
 }
 
-/* Controls section */
+
+/* ============================================================
+   CONTROLS CARD
+   ============================================================ */
+
 #controls {
-    margin: 20px auto;
-    max-width: 600px;
+    width: min(100%, 620px);
+
+    margin: 18px auto 20px;
+    padding: 18px 20px 20px;
+
     text-align: left;
+
+    background: rgba(255, 255, 255, 0.82);
+
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 14px;
+
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.07),
+        0 2px 6px rgba(0, 0, 0, 0.04);
+
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
 }
 
-    #controls label {
-        display: block;
-        margin-top: 10px;
-        font-weight: bold;
-    }
+#controls label {
+    display: block;
 
-    #controls input[type="number"],
-    #controls select {
-        width: 100%;
-        padding: 8px;
-        margin-top: 5px;
-        font-size: 16px;
-    }
+    margin-top: 14px;
+    margin-bottom: 5px;
 
-    #controls button {
-        display: block; /* Center the button */
-        margin: 20px auto; /* Center horizontally and add vertical margin */
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-    }
+    font-size: 15px;
+    font-weight: 700;
 
-/* Game container */
+    color: #333;
+}
+
+#controls label:first-child {
+    margin-top: 0;
+}
+
+
+/* ============================================================
+   FORM CONTROLS
+   ============================================================ */
+
+#controls input[type="number"],
+#controls select {
+    display: block;
+
+    width: 100%;
+    min-height: 42px;
+
+    margin: 0;
+    padding: 9px 12px;
+
+    font-family: inherit;
+    font-size: 15px;
+    color: #252525;
+
+    background-color: rgba(255, 255, 255, 0.96);
+
+    border: 1px solid #aaa;
+    border-radius: 7px;
+
+    outline: none;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
+}
+
+#controls input[type="number"]:hover,
+#controls select:hover {
+    border-color: #777;
+}
+
+#controls input[type="number"]:focus,
+#controls select:focus {
+    border-color: #555;
+
+    box-shadow:
+        0 0 0 3px rgba(0, 0, 0, 0.08);
+
+    background-color: #fff;
+}
+
+
+/* ============================================================
+   START GAME BUTTON
+   ============================================================ */
+
+#controls button {
+    display: block;
+
+    min-width: 145px;
+
+    margin: 20px auto 0;
+    padding: 10px 22px;
+
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+
+    color: #fff;
+
+    background: #303030;
+
+    border: 1px solid #202020;
+    border-radius: 8px;
+
+    box-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.16);
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.15s ease,
+        transform 0.1s ease,
+        box-shadow 0.15s ease;
+}
+
+#controls button:hover {
+    background: #171717;
+
+    box-shadow:
+        0 5px 12px rgba(0, 0, 0, 0.20);
+
+    transform: translateY(-1px);
+}
+
+#controls button:active {
+    transform: translateY(0);
+
+    box-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+#controls button:focus-visible {
+    outline: 3px solid rgba(0, 0, 0, 0.18);
+    outline-offset: 3px;
+}
+
+
+/* ============================================================
+   GAME CONTAINER
+   ============================================================ */
+
 #game-container {
-    margin: 20px auto;
-    max-width: 600px;
-    padding: 10px;
+    width: min(100%, 620px);
+
+    margin: 0 auto;
+    padding: 2px 10px 18px;
+
+    text-align: center;
 }
+
+
+/* ============================================================
+   PUZZLE BOARD
+   ============================================================ */
 
 #puzzle-container {
     position: relative;
-    width: 100%;
-    max-width: 400px; /* Adjust as needed */
-    margin: 20px auto;
-    aspect-ratio: 1 / 1; /* Enforce square aspect ratio */
-    overflow: hidden; /* Hide any overflow */
-    /* Background is transparent as per previous request */
-    border: 1px solid #ccc;
-    border-radius: 5px;
+
+    width: min(100%, 380px);
+
+    margin: 10px auto 14px;
+
+    aspect-ratio: 1 / 1;
+
+    overflow: hidden;
+
+    background: rgba(255, 255, 255, 0.55);
+
+    border: 1px solid rgba(0, 0, 0, 0.14);
+    border-radius: 9px;
+
+    box-shadow:
+        0 10px 28px rgba(0, 0, 0, 0.12),
+        0 2px 6px rgba(0, 0, 0, 0.07);
 }
 
 #puzzle,
 #full-image {
     position: absolute;
+
     top: 0;
     left: 0;
+
     width: 100%;
     height: 100%;
 }
 
+
+/* ============================================================
+   PUZZLE TILES
+   ============================================================ */
+
 .tile {
     position: absolute;
+
     z-index: 2;
-    transition: opacity 1s;
-    background-size: cover; /* Adjusted to fit container */
-    border: 1px solid #ccc;
-    cursor: pointer;
+
     overflow: hidden;
+
+    background-size: cover;
+
+    border: 1px solid rgba(255, 255, 255, 0.82);
+
+    cursor: pointer;
+
+    transition:
+        opacity 1s,
+        filter 0.12s ease;
 }
 
-/* Timer and Move Counter Styles */
+.tile:hover {
+    filter: brightness(1.04);
+}
+
+
+/* ============================================================
+   TIMER / MOVE COUNTER
+   ============================================================ */
+
 #timer,
 #move-counter {
-    font-size: 18px;
-    margin-top: 10px;
-    /* Center the text */
+    display: inline-block;
+
+    margin: 2px 10px 0;
+
+    font-size: 17px;
+    font-weight: 600;
+
+    color: #333;
+
     text-align: center;
 }
 
-/* Leaderboard section */
+
+/* ============================================================
+   LEADERBOARD
+   ============================================================ */
+
 #leaderboard {
-    margin: 40px auto;
-    max-width: 600px;
+    width: min(100%, 620px);
+
+    margin: 28px auto 18px;
+    padding: 18px;
+
     text-align: center;
+
+    background: rgba(255, 255, 255, 0.78);
+
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.06);
 }
 
 #leaderboard-title {
-    margin-bottom: 20px;
+    margin-bottom: 14px;
+
+    font-size: 20px;
+    font-weight: 700;
+
+    color: #303030;
 }
 
 #leaderboard-table {
-    margin: 0 auto;
-    border-collapse: collapse;
     width: 100%;
+
+    margin: 0 auto;
+
+    border-collapse: separate;
+    border-spacing: 0;
+
+    overflow: hidden;
+
+    background: rgba(255, 255, 255, 0.9);
+
+    border: 1px solid #d3d3d3;
+    border-radius: 8px;
 }
 
-    #leaderboard-table th,
-    #leaderboard-table td {
-        border: 1px solid #ccc;
-        padding: 10px;
-        font-size: 16px;
-    }
+#leaderboard-table th,
+#leaderboard-table td {
+    padding: 9px 10px;
 
-    #leaderboard-table th {
-        background-color: #f9f9f9;
-    }
+    font-size: 14px;
+
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+#leaderboard-table th:last-child,
+#leaderboard-table td:last-child {
+    border-right: 0;
+}
+
+#leaderboard-table tr:last-child td {
+    border-bottom: 0;
+}
+
+#leaderboard-table th {
+    font-weight: 700;
+
+    color: #333;
+
+    background: #f3f3f3;
+}
+
+#leaderboard-table tbody tr:hover {
+    background: rgba(0, 0, 0, 0.025);
+}
 
 #reset-leaderboard-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
+    margin-top: 14px;
+    padding: 8px 16px;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    color: #444;
+
+    background: #fff;
+
+    border: 1px solid #aaa;
+    border-radius: 7px;
+
     cursor: pointer;
+
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease;
 }
 
-/* Styles for the confirmation modal */
+#reset-leaderboard-button:hover {
+    background: #f3f3f3;
+    border-color: #777;
+}
+
+
+/* ============================================================
+   CONFIRMATION MODAL
+   ============================================================ */
+
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1000; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0.5); /* Black with opacity */
+    display: none;
+
+    position: fixed;
+
+    z-index: 1000;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: auto;
+
+    padding: 20px;
+
+    background-color: rgba(0, 0, 0, 0.48);
+
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
 }
 
 .modal-content {
-    background-color: #fefefe;
-    margin: 15% auto; /* Centered */
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
-    max-width: 400px; /* Max width */
-    border-radius: 5px;
+    width: min(90%, 420px);
+
+    margin: min(20vh, 150px) auto 0;
+    padding: 24px;
+
+    background: #fff;
+
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 12px;
+
+    box-shadow:
+        0 18px 50px rgba(0, 0, 0, 0.25);
 }
 
-    .modal-content p {
-        font-size: 16px;
-        margin-bottom: 20px;
+.modal-content p {
+    margin-bottom: 18px;
+
+    font-size: 15px;
+    line-height: 1.5;
+
+    color: #333;
+}
+
+.modal-content button {
+    min-width: 96px;
+
+    margin: 6px;
+    padding: 9px 16px;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+
+    border: 1px solid #999;
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.modal-content button:hover {
+    background: #e9e9e9;
+    border-color: #666;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 700px) {
+
+    body {
+        padding:
+            14px
+            12px
+            28px;
     }
 
-    .modal-content button {
-        margin: 10px;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
+    h1 {
+        font-size: 1.9rem;
     }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
-    #controls,
-    #leaderboard {
-        width: 90%;
-        padding: 0 5%;
+    #controls {
+        width: 100%;
+
+        margin-top: 16px;
+        padding: 18px 16px 20px;
+
+        border-radius: 12px;
+    }
+
+    #controls label {
+        margin-top: 14px;
+    }
+
+    #controls input[type="number"],
+    #controls select {
+        min-height: 44px;
+
+        font-size: 16px;
+    }
+
+    #controls button {
+        width: 100%;
+
+        margin-top: 20px;
+    }
+
+    #game-container {
+        width: 100%;
+        padding-left: 0;
+        padding-right: 0;
     }
 
     #puzzle-container {
-        max-width: 90%;
+        width: min(100%, 390px);
+
+        margin-top: 10px;
     }
 
-    #controls label,
-    #controls input,
-    #controls select,
-    #controls button {
+    #timer,
+    #move-counter {
+        margin-left: 8px;
+        margin-right: 8px;
+
+        font-size: 16px;
+    }
+
+    #leaderboard {
         width: 100%;
-        margin: 5px 0;
+
+        margin-top: 24px;
+
+        padding: 16px 12px;
     }
 
     #leaderboard-table th,
     #leaderboard-table td {
-        padding: 8px;
+        padding: 8px 6px;
+
+        font-size: 13px;
     }
 
     .modal-content {
-        width: 90%;
-        margin-top: 40%;
+        width: 100%;
+
+        margin-top: 25vh;
+        padding: 22px 18px;
+    }
+}
+
+
+/* ============================================================
+   VERY SMALL SCREENS
+   ============================================================ */
+
+@media (max-width: 420px) {
+
+    body {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    h1 {
+        font-size: 1.7rem;
+    }
+
+    #version {
+        font-size: 12px;
+    }
+
+    #controls {
+        padding: 16px 14px 18px;
+    }
+
+    #puzzle-container {
+        width: 100%;
+    }
+
+    #timer,
+    #move-counter {
+        font-size: 15px;
     }
 }
