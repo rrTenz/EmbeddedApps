@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#16110d" />
+  <title>Survivor Guess Who? | Survivor Geek</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="hero">
+      <div class="eyebrow">SURVIVOR GEEK</div>
+      <h1>Survivor Guess Who?</h1>
+      <p class="subtitle">Ask questions. Eliminate castaways. Name the mystery Survivor.</p>
+    </header>
+
+    <section class="top-panel glass">
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-label">Questions</span>
+          <strong id="questionCountValue">0</strong>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Wrong Guesses</span>
+          <strong id="wrongGuessValue">0</strong>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Streak</span>
+          <strong id="streakValue">0</strong>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Remaining</span>
+          <strong id="remainingValue">0</strong>
+        </div>
+        <div class="stat optional-stat">
+          <span class="stat-label">Best Streak</span>
+          <strong id="bestStreakValue">0</strong>
+        </div>
+      </div>
+
+      <div class="controls">
+        <label>
+          <span>Game Pool</span>
+          <select id="poolSelect">
+            <option value="all">All Survivor (Random 24)</option>
+          </select>
+        </label>
+        <button id="howToPlayBtn" class="button secondary">How to Play</button>
+        <button id="newGameBtn" class="button primary">New Game</button>
+      </div>
+    </section>
+
+    <section id="gameHint" class="game-hint glass" aria-live="polite">
+      Ask a question or click an active portrait to make a guess.
+    </section>
+
+    <section class="game-layout">
+      <aside class="sidebar">
+        <section class="glass panel question-panel">
+          <div class="panel-heading">
+            <div>
+              <h2>Ask a Question</h2>
+              <p class="muted">Only questions that can narrow the remaining suspects are shown.</p>
+            </div>
+          </div>
+          <div id="questionButtons" class="question-list"></div>
+        </section>
+
+        <section class="glass panel guess-panel">
+          <h2>Make a Guess</h2>
+          <div class="guess-row">
+            <input
+              id="guessInput"
+              type="text"
+              list="playerNames"
+              placeholder="Type a castaway name..."
+              autocomplete="off"
+            />
+            <datalist id="playerNames"></datalist>
+            <button id="guessBtn" class="button accent">Guess</button>
+          </div>
+          <p class="muted small">You can also click any active portrait. Wrong guesses are logged and eliminated.</p>
+        </section>
+
+        <section class="glass panel answer-panel clue-panel">
+          <div class="panel-heading">
+            <h2>Clue Log</h2>
+            <span id="logCount" class="tiny-badge">0</span>
+          </div>
+          <div id="clueLog" class="clue-log">
+            <p class="muted">Your questions and guesses will appear here.</p>
+          </div>
+        </section>
+      </aside>
+
+      <section class="board-section">
+        <div class="board-heading">
+          <div>
+            <h2>Suspects</h2>
+            <p id="boardDescription" class="muted">Click an active portrait when you are ready to guess.</p>
+          </div>
+          <span id="boardPoolBadge" class="pool-badge"></span>
+        </div>
+        <div id="playerBoard" class="player-board" aria-live="polite"></div>
+      </section>
+    </section>
+  </main>
+
+  <div id="helpModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <div class="modal-card glass help-card">
+      <div class="modal-badge">🏝️</div>
+      <h2 id="helpTitle">How to Play</h2>
+      <div class="help-copy">
+        <p>A mystery Survivor is secretly chosen from the board.</p>
+        <p>Ask <strong>yes/no questions</strong> to eliminate suspects. Only questions that can still narrow the board are shown.</p>
+        <p>When you think you know the answer, click an active portrait or type the castaway's name. A wrong guess eliminates that player.</p>
+        <p>Random modes use a fresh board of 24 unique contestants. You can play across all 50 seasons or limit the board to a 10-season era.</p>
+        <p class="muted small">Tip: the goal is to solve the mystery with as few questions and wrong guesses as possible.</p>
+      </div>
+      <button id="helpCloseBtn" class="button primary">Got It</button>
+    </div>
+  </div>
+
+  <div id="confirmModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="modal-card glass">
+      <div class="modal-badge">🔥</div>
+      <h2 id="confirmTitle">Start a New Game?</h2>
+      <p>You have an active game in progress. Your current clues will be cleared.</p>
+      <div class="modal-actions">
+        <button id="confirmCancelBtn" class="button secondary">Keep Playing</button>
+        <button id="confirmNewBtn" class="button primary">Start New Game</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card glass">
+      <div id="modalBadge" class="modal-badge">🔥</div>
+      <h2 id="modalTitle">Correct!</h2>
+      <div id="modalPlayer" class="modal-player"></div>
+      <p id="modalText"></p>
+      <button id="modalNextBtn" class="button primary">Play Again</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
