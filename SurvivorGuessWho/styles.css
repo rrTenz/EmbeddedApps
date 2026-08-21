@@ -1005,3 +1005,225 @@ input:focus {
     font-size: 0.72rem;
   }
 }
+
+
+/* ============================================================
+   v10.2 layout refinement
+   ============================================================ */
+
+.mobile-actions,
+.back-to-board-button {
+  display: none;
+}
+
+/* Slightly tighten the main desktop composition. */
+@media (min-width: 901px) {
+  .app-shell {
+    width: min(1480px, calc(100% - 34px));
+  }
+
+  .game-layout {
+    grid-template-columns: minmax(270px, 315px) minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .sidebar {
+    gap: 12px;
+  }
+
+  .top-panel {
+    padding: 14px 16px;
+  }
+
+  .player-board {
+    gap: 9px;
+  }
+}
+
+/* Tablet / narrow desktop */
+@media (max-width: 900px) {
+  .mobile-actions {
+    display: none;
+  }
+
+  .game-layout {
+    gap: 16px;
+  }
+
+  .board-section {
+    padding-bottom: 2px;
+  }
+}
+
+/* Phone layout */
+@media (max-width: 700px) {
+  .hero {
+    padding-top: 2px;
+  }
+
+  .hero .eyebrow {
+    margin-bottom: 3px;
+  }
+
+  .top-panel {
+    margin-bottom: 10px;
+  }
+
+  .game-hint {
+    margin-bottom: 10px;
+  }
+
+  .mobile-actions {
+    position: sticky;
+    top: 6px;
+    z-index: 12;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 8px;
+    border-radius: 14px;
+    background: rgba(20, 20, 18, 0.82);
+  }
+
+  .mobile-action-button {
+    min-height: 42px;
+    padding: 8px 10px;
+    color: var(--text);
+    font-weight: 900;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .mobile-action-button.accent-action {
+    color: #1d1208;
+    background: var(--accent);
+    border-color: #ffe5b8;
+  }
+
+  .board-section {
+    scroll-margin-top: 72px;
+  }
+
+  .question-panel,
+  .guess-panel,
+  .clue-panel {
+    scroll-margin-top: 72px;
+  }
+
+  .board-heading {
+    align-items: center;
+  }
+
+  .board-heading > div {
+    min-width: 0;
+  }
+
+  .board-heading .muted {
+    margin-bottom: 0;
+  }
+
+  .pool-badge {
+    flex: 0 0 auto;
+  }
+
+  .sidebar {
+    gap: 10px;
+  }
+
+  .question-panel,
+  .guess-panel,
+  .clue-panel {
+    border-radius: 16px;
+  }
+
+  .back-to-board-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+    min-height: 38px;
+    padding: 7px 10px;
+    color: rgba(255, 249, 237, 0.80);
+    font-size: 0.78rem;
+    font-weight: 850;
+    border: 1px solid rgba(255,255,255,0.13);
+    border-radius: 10px;
+    background: rgba(255,255,255,0.05);
+  }
+
+  .clue-log {
+    max-height: 220px;
+  }
+}
+
+/* Narrow phones: stack top controls more cleanly. */
+@media (max-width: 520px) {
+  .top-panel {
+    padding: 12px;
+  }
+
+  .stats {
+    gap: 5px;
+  }
+
+  .stat-label {
+    font-size: 0.58rem;
+  }
+
+  .stat strong {
+    font-size: 1.18rem;
+  }
+
+  .controls {
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+  }
+
+  .controls label {
+    grid-column: 1 / -1;
+  }
+
+  .controls .button {
+    min-height: 40px;
+    padding: 8px 9px;
+    font-size: 0.82rem;
+  }
+
+  select {
+    padding: 10px 11px;
+    font-size: 0.9rem;
+  }
+
+  .game-hint {
+    font-size: 0.76rem;
+    line-height: 1.25;
+  }
+
+  .mobile-actions {
+    gap: 6px;
+    padding: 6px;
+  }
+
+  .mobile-action-button {
+    min-height: 40px;
+    font-size: 0.82rem;
+  }
+}
+
+/* Keep touch targets readable on tiny phones. */
+@media (max-width: 340px) {
+  .mobile-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .controls {
+    grid-template-columns: 1fr;
+  }
+
+  .controls label {
+    grid-column: auto;
+  }
+}

@@ -55,9 +55,14 @@
       Ask a question or click an active portrait to make a guess.
     </section>
 
+    <nav class="mobile-actions glass" aria-label="Game actions">
+      <button id="mobileAskBtn" class="mobile-action-button" type="button">Ask a Question</button>
+      <button id="mobileGuessBtn" class="mobile-action-button accent-action" type="button">Make a Guess</button>
+    </nav>
+
     <section class="game-layout">
       <aside class="sidebar">
-        <section class="glass panel question-panel">
+        <section id="questionPanel" class="glass panel question-panel">
           <div class="panel-heading">
             <div>
               <h2>Ask a Question</h2>
@@ -65,9 +70,10 @@
             </div>
           </div>
           <div id="questionButtons" class="question-list"></div>
+          <button class="back-to-board-button" data-scroll-target="suspectsPanel" type="button">Back to Suspects</button>
         </section>
 
-        <section class="glass panel guess-panel">
+        <section id="guessPanel" class="glass panel guess-panel">
           <h2>Make a Guess</h2>
           <div class="guess-row">
             <input
@@ -81,9 +87,10 @@
             <button id="guessBtn" class="button accent">Guess</button>
           </div>
           <p class="muted small">You can also click any active portrait. Wrong guesses are logged and eliminated.</p>
+          <button class="back-to-board-button" data-scroll-target="suspectsPanel" type="button">Back to Suspects</button>
         </section>
 
-        <section class="glass panel answer-panel clue-panel">
+        <section id="cluePanel" class="glass panel answer-panel clue-panel">
           <div class="panel-heading">
             <h2>Clue Log</h2>
             <span id="logCount" class="tiny-badge">0</span>
@@ -91,10 +98,11 @@
           <div id="clueLog" class="clue-log">
             <p class="muted">Your questions and guesses will appear here.</p>
           </div>
+          <button class="back-to-board-button" data-scroll-target="suspectsPanel" type="button">Back to Suspects</button>
         </section>
       </aside>
 
-      <section class="board-section">
+      <section id="suspectsPanel" class="board-section">
         <div class="board-heading">
           <div>
             <h2>Suspects</h2>

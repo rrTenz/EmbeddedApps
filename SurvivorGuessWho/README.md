@@ -1,38 +1,64 @@
-# Survivor Guess Who? v10.1
+# Survivor Guess Who? v10.2
 
-v10.1 is a small responsive-layout adjustment to the v10 release candidate.
+v10.2 improves the layout without changing gameplay.
 
-## Mobile portrait grid
+## Main mobile improvement
 
-Based on testing, the four-column portrait board remained clear and compact at medium/narrow widths.
+v10 moved the suspect board above the question controls, which made the game immediately look like Guess Who.
 
-The responsive behavior is now:
+The downside was that a phone user could then need to scroll past a 24-player board before reaching the question controls.
+
+v10.2 keeps the board near the top **and** adds a compact sticky mobile action bar:
 
 ```text
-> 460px wide      4 portrait columns
-341-460px wide    3 portrait columns
-<= 340px wide     2 portrait columns
+Ask a Question | Make a Guess
 ```
 
-This keeps the board shorter on most phones and narrow browser windows while still giving very small screens enough room for recognizable faces and readable names.
+These buttons smoothly jump to the relevant panel.
 
-## Preserved v10 behavior
+Question, Guess, and Clue Log panels also include:
 
-- suspect board appears before questions on narrow screens
-- responsive Game Pool / button layout
-- mobile-safe victory modal
-- season context on victory screen
-- question split hover tooltip removed
-- full U.S. Survivor Seasons 1-50
-- Random 24 + era modes + all 50 specific seasons
-- shared SlidePuzzle image library
+```text
+Back to Suspects
+```
 
-## Final mobile test
+so moving between deduction and the board is much faster on a phone.
 
-After local testing, publish to GitHub Pages and open the actual page on a physical phone. That will verify:
+## Mobile hierarchy
 
-- viewport width
-- touch targets
-- iframe behavior
-- browser chrome
-- scrolling
+```text
+Header
+Stats + Game Pool
+Status
+Quick Actions
+Suspect Board
+Ask a Question
+Make a Guess
+Clue Log
+```
+
+The Quick Actions remain visible while scrolling on phone-sized screens.
+
+## Other layout improvements
+
+- slightly tighter desktop spacing
+- narrower desktop sidebar so the board gets more room
+- more compact top controls
+- improved phone control wrapping
+- shorter mobile Clue Log
+- better scroll offsets for sticky mobile actions
+- touch-friendly Back to Suspects controls
+
+## Portrait grid
+
+The v10.1 breakpoints remain:
+
+```text
+> 460px       4 columns
+341–460px     3 columns
+<= 340px      2 columns
+```
+
+## No gameplay changes
+
+The full Seasons 1–50 database, Random 24 modes, question engine, streaks, personal bests, and clue system are unchanged.

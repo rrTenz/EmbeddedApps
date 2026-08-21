@@ -26,6 +26,8 @@ const bestStreakValue = document.getElementById("bestStreakValue");
 const poolSelect = document.getElementById("poolSelect");
 const newGameBtn = document.getElementById("newGameBtn");
 const howToPlayBtn = document.getElementById("howToPlayBtn");
+const mobileAskBtn = document.getElementById("mobileAskBtn");
+const mobileGuessBtn = document.getElementById("mobileGuessBtn");
 const questionButtons = document.getElementById("questionButtons");
 const playerBoard = document.getElementById("playerBoard");
 const playerNames = document.getElementById("playerNames");
@@ -1069,6 +1071,18 @@ async function init() {
   }
 }
 
+
+function scrollToPanel(id) {
+  const element = document.getElementById(id);
+  if (!element) return;
+
+  const top = element.getBoundingClientRect().top + window.scrollY - 14;
+  window.scrollTo({
+    top,
+    behavior: "smooth"
+  });
+}
+
 function gameHasProgress() {
   return !roundFinished && (questionCount > 0 || wrongGuesses > 0);
 }
@@ -1139,6 +1153,19 @@ confirmModal.addEventListener("click", event => {
     pendingPoolValue = null;
     confirmModal.classList.add("hidden");
   }
+});
+
+
+mobileAskBtn.addEventListener("click", () => scrollToPanel("questionPanel"));
+mobileGuessBtn.addEventListener("click", () => {
+  scrollToPanel("guessPanel");
+  window.setTimeout(() => guessInput.focus(), 350);
+});
+
+document.querySelectorAll("[data-scroll-target]").forEach(button => {
+  button.addEventListener("click", () => {
+    scrollToPanel(button.dataset.scrollTarget);
+  });
 });
 
 guessBtn.addEventListener("click", makeTypedGuess);
