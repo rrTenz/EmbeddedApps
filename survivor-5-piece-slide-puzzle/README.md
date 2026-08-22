@@ -19,6 +19,8 @@ Pages and embedded in Google Sites with an iframe.
 - v11 adds a dedicated phone-width layout for Google Sites embeds without changing desktop/tablet sizing
 - v12 hardens score submission against duplicate records
 - Share Result now includes the canonical Survivor Geek puzzle URL
+- v13 makes Share Result robust inside iframes: native share → Clipboard API → legacy copy → visible copy prompt
+- Recommended Google Sites iframe permissions: `allow="clipboard-write; web-share"`
 - Keyboard arrow support for accessibility/testing
 - Legal collision detection based on occupied 1 × 1 cells
 - No piece rotation
