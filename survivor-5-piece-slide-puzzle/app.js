@@ -2,6 +2,7 @@ import { firebaseConfig } from "./firebase-config.js";
 
 const COLS = 4;
 const ROWS = 6;
+const SHARE_URL = "https://www.survivorgeek.app/apps/survivor-5-piece-slide-puzzle";
 const START = [
   { id: "tl", kind: "corner", x: 0, y: 0, cells: [[0,0],[1,0],[0,1]], medallion: "tl" },
   { id: "tr", kind: "corner", x: 2, y: 0, cells: [[0,0],[1,0],[1,1]], medallion: "tr" },
@@ -43,6 +44,7 @@ let timerFrame = null;
 let solved = false;
 let drag = null;
 let scoreSubmitted = false;
+let scoreSubmitting = false;
 
 let cloud = {
   enabled: false,
@@ -370,6 +372,7 @@ function finishPuzzle() {
   scoreMessage.className = "form-message";
   submitScoreBtn.disabled = false;
   scoreSubmitted = false;
+  scoreSubmitting = false;
 
   window.setTimeout(() => {
     overlay.hidden = false;
@@ -385,6 +388,7 @@ function resetGame() {
   startedAt = null;
   solved = false;
   scoreSubmitted = false;
+  scoreSubmitting = false;
   if (timerFrame) cancelAnimationFrame(timerFrame);
   timerEl.textContent = "0:00.0";
   movesEl.textContent = "0";
@@ -566,23 +570,30 @@ async function loadLeaderboard() {
 
 async function handleScoreSubmit(event) {
   event.preventDefault();
-  if (scoreSubmitted) return;
+
+  // Lock immediately so double-clicks, Enter key repeats, or overlapping
+  // submit events cannot create duplicate leaderboard records.
+  if (scoreSubmitted || scoreSubmitting) return;
+  scoreSubmitting = true;
+  submitScoreBtn.disabled = true;
 
   const result = validateNickname(nicknameInput.value);
   if (!result.ok) {
+    scoreSubmitting = false;
+    submitScoreBtn.disabled = false;
     scoreMessage.textContent = result.message;
     scoreMessage.className = "form-message error";
     return;
   }
 
   localStorage.setItem("survivorPuzzleNickname", result.name);
-  submitScoreBtn.disabled = true;
   scoreMessage.textContent = "Submitting…";
   scoreMessage.className = "form-message";
 
   try {
     await submitScore(result.name);
     scoreSubmitted = true;
+    scoreSubmitting = false;
     scoreMessage.textContent = cloud.enabled
       ? "Score submitted to the Survivor Geek leaderboard!"
       : "Score saved on this device. Connect Firebase to make the leaderboard public.";
@@ -590,6 +601,7 @@ async function handleScoreSubmit(event) {
     await loadLeaderboard();
   } catch (error) {
     console.error(error);
+    scoreSubmitting = false;
     submitScoreBtn.disabled = false;
     scoreMessage.textContent = "Score submission failed. Please try again.";
     scoreMessage.className = "form-message error";
@@ -598,11 +610,17 @@ async function handleScoreSubmit(event) {
 
 async function shareResult() {
   const text = `I solved the Survivor 5-Piece Slide Puzzle in ${formatTime(elapsedMs)} with ${moves} moves! 🔥`;
+  const clipboardText = `${text}\n\n${SHARE_URL}`;
+
   try {
     if (navigator.share) {
-      await navigator.share({ title: "Survivor 5-Piece Slide Puzzle", text });
+      await navigator.share({
+        title: "Survivor 5-Piece Slide Puzzle",
+        text,
+        url: SHARE_URL
+      });
     } else {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(clipboardText);
       shareBtn.textContent = "Copied!";
       setTimeout(() => { shareBtn.textContent = "Share Result"; }, 1500);
     }
