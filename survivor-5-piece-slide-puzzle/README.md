@@ -16,6 +16,7 @@ Pages and embedded in Google Sites with an iframe.
 - Desktop board size is viewport-aware so the full puzzle fits comfortably on typical screens
 - Portrait layouts switch to one column and cap board size by viewport height as well as width
 - v10 portrait polish reduces header/HUD height without shrinking the puzzle board
+- v11 adds a dedicated phone-width layout for Google Sites embeds without changing desktop/tablet sizing
 - Keyboard arrow support for accessibility/testing
 - Legal collision detection based on occupied 1 × 1 cells
 - No piece rotation

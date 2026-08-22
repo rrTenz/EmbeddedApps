@@ -707,3 +707,93 @@ h1 {
   .win-actions { flex-direction: column; }
   .win-actions .button { width: 100%; }
 }
+
+
+/* v11 phone-width refinement for Google Sites embeds.
+   Keep desktop/tablet unchanged, but make true phone layouts feel less
+   oversized and reduce the amount of scrolling needed. */
+@media (max-width: 520px) {
+  .app-shell {
+    width: min(100% - 12px, 720px);
+    padding-top: 6px;
+  }
+
+  .hero {
+    gap: 8px;
+    margin-bottom: 7px;
+  }
+
+  .hero-logo {
+    width: 48px;
+    height: 48px;
+  }
+
+  .eyebrow {
+    font-size: .62rem;
+    letter-spacing: .14em;
+  }
+
+  h1 {
+    font-size: clamp(1.45rem, 6.8vw, 1.95rem);
+    line-height: 1.02;
+  }
+
+  .subtitle {
+    max-width: 100%;
+    font-size: .84rem;
+    line-height: 1.28;
+  }
+
+  .game-column {
+    padding: 7px;
+    border-radius: 14px;
+  }
+
+  .hud {
+    gap: 6px;
+    margin-bottom: 7px;
+  }
+
+  .stat {
+    min-height: 46px;
+    padding: 6px 10px;
+  }
+
+  .stat-label {
+    font-size: .58rem;
+  }
+
+  .stat strong {
+    font-size: 1.08rem;
+  }
+
+  .hud .button {
+    min-height: 42px;
+    padding: 0 12px;
+  }
+
+  .board {
+    width: min(
+      88vw,
+      390px,
+      calc((100vh - 265px) * 0.6666667)
+    );
+  }
+
+  .instructions {
+    max-width: 92%;
+    margin-top: 7px;
+    font-size: .78rem;
+    line-height: 1.35;
+  }
+
+  .leaderboard-card {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .card-heading h2 {
+    font-size: 1.32rem;
+  }
+}
+
