@@ -192,5 +192,3 @@ Function or store a signed move sequence.
 - UI now displays a subtle `v0.15` version label for easy deployment/cache verification
 
 - v0.16 moves the version label into the header beside `SURVIVOR GEEK` so it is always visible without scrolling
-
-- v0.17 displays a plain visible version line directly below the puzzle instructions for reliable deployment verification

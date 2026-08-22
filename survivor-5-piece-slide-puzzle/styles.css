@@ -893,14 +893,3 @@ h1 {
     font-size: .6rem;
   }
 }
-
-
-.visible-version {
-  margin: 7px 0 0;
-  text-align: center;
-  color: rgba(255, 239, 216, .72);
-  font-size: .72rem;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
