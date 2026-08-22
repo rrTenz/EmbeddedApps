@@ -20,6 +20,7 @@ Pages and embedded in Google Sites with an iframe.
 - v12 hardens score submission against duplicate records
 - Share Result now includes the canonical Survivor Geek puzzle URL
 - v13 makes Share Result robust inside iframes: native share → Clipboard API → legacy copy → visible copy prompt
+- v14 replaces the iframe-dependent Share button behavior with a guaranteed in-app share dialog, plus Copy Result and optional native Share
 - Recommended Google Sites iframe permissions: `allow="clipboard-write; web-share"`
 - Keyboard arrow support for accessibility/testing
 - Legal collision detection based on occupied 1 × 1 cells
@@ -184,3 +185,10 @@ Function or store a signed move sequence.
 - `assets/survivor-puzzle-logo.svg` – original Survivor-inspired app mark
 - `assets/tribal-pattern.svg` – puzzle piece texture
 - `assets/wood-grain.svg` – board texture
+
+- v15 adds cache-busting to CSS/JS so browsers do not keep older share behavior
+- v15 clarifies that Copy Result copies to clipboard while Open Share Sheet does not
+
+- UI now displays a subtle `v0.15` version label for easy deployment/cache verification
+
+- v0.16 moves the version label into the header beside `SURVIVOR GEEK` so it is always visible without scrolling

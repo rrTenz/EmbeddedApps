@@ -797,3 +797,99 @@ h1 {
   }
 }
 
+
+
+.share-card {
+  width: min(520px, 100%);
+  padding: 24px;
+  border: 1px solid rgba(255, 225, 180, .22);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 50% -15%, rgba(229,152,76,.18), transparent 45%),
+    linear-gradient(180deg, #412614, #1d120b);
+  box-shadow: 0 30px 80px rgba(0,0,0,.52);
+}
+
+.share-card h2 {
+  margin-bottom: 6px;
+  font-size: 2rem;
+}
+
+.share-intro {
+  margin-bottom: 12px;
+  color: var(--muted);
+}
+
+.share-text {
+  width: 100%;
+  min-height: 130px;
+  resize: vertical;
+  padding: 13px;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 12px;
+  outline: none;
+  color: var(--ink);
+  background: rgba(0,0,0,.24);
+  line-height: 1.45;
+}
+
+.share-actions {
+  display: flex;
+  gap: 9px;
+  margin-top: 13px;
+}
+
+@media (max-width: 520px) {
+  .share-actions {
+    flex-direction: column;
+  }
+
+  .share-actions .button {
+    width: 100%;
+  }
+}
+
+
+
+
+
+
+.eyebrow-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+
+.eyebrow-row .eyebrow {
+  margin-bottom: 0;
+}
+
+.version-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 2px 7px;
+  border: 1px solid rgba(255, 226, 184, .22);
+  border-radius: 999px;
+  color: rgba(255, 239, 216, .72);
+  background: rgba(255, 255, 255, .05);
+  font-size: .66rem;
+  font-weight: 800;
+  letter-spacing: .05em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+
+@media (orientation: portrait) {
+  .eyebrow-row {
+    margin-bottom: 3px;
+  }
+
+  .version-badge {
+    min-height: 18px;
+    padding: 2px 6px;
+    font-size: .6rem;
+  }
+}

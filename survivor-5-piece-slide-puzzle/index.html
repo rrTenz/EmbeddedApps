@@ -7,14 +7,17 @@
   <title>Survivor 5-Piece Slide Puzzle</title>
   <meta name="description" content="Solve the Survivor 5-Piece Slide Puzzle inspired by Survivor: Edge of Extinction.">
   <link rel="icon" href="assets/survivor-puzzle-logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=0.16">
 </head>
 <body>
   <main class="app-shell">
     <header class="hero">
       <img class="hero-logo" src="assets/survivor-puzzle-logo.svg" alt="" aria-hidden="true">
       <div>
-        <p class="eyebrow">SURVIVOR GEEK</p>
+        <div class="eyebrow-row">
+          <p class="eyebrow">SURVIVOR GEEK</p>
+          <span class="version-badge" aria-label="App version 0.16">v0.16</span>
+        </div>
         <h1>Survivor 5-Piece Slide Puzzle</h1>
         <p class="subtitle">Slide the five pieces until the center square is locked inside all four corners.</p>
       </div>
@@ -60,8 +63,7 @@
       </aside>
     </section>
   </main>
-
-  <div id="winOverlay" class="overlay" hidden>
+<div id="winOverlay" class="overlay" hidden>
     <div class="win-card" role="dialog" aria-modal="true" aria-labelledby="winTitle">
       <img class="win-logo" src="assets/survivor-puzzle-logo.svg" alt="" aria-hidden="true">
       <p class="eyebrow">CHALLENGE COMPLETE</p>
@@ -96,6 +98,25 @@
     </div>
   </div>
 
-  <script type="module" src="app.js"></script>
+
+  <div id="shareOverlay" class="overlay" hidden>
+    <div class="share-card" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+      <p class="eyebrow">SHARE YOUR RESULT</p>
+      <h2 id="shareTitle">Share Result</h2>
+      <p class="share-intro">Copy your result and share it anywhere.</p>
+
+      <textarea id="shareText" class="share-text" readonly aria-label="Share result text"></textarea>
+
+      <div class="share-actions">
+        <button id="copyShareBtn" class="button button-primary" type="button">Copy Result</button>
+        <button id="nativeShareBtn" class="button button-secondary" type="button">Open Share Sheet</button>
+        <button id="closeShareBtn" class="button button-secondary" type="button">Close</button>
+      </div>
+
+      <p id="shareMessage" class="form-message" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <script type="module" src="app.js?v=0.16"></script>
 </body>
 </html>

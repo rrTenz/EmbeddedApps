@@ -26,6 +26,12 @@ const finalTimeEl = document.getElementById("finalTime");
 const finalMovesEl = document.getElementById("finalMoves");
 const playAgainBtn = document.getElementById("playAgainBtn");
 const shareBtn = document.getElementById("shareBtn");
+const shareOverlay = document.getElementById("shareOverlay");
+const shareTextEl = document.getElementById("shareText");
+const copyShareBtn = document.getElementById("copyShareBtn");
+const nativeShareBtn = document.getElementById("nativeShareBtn");
+const closeShareBtn = document.getElementById("closeShareBtn");
+const shareMessage = document.getElementById("shareMessage");
 const closeWinBtn = document.getElementById("closeWinBtn");
 const scoreForm = document.getElementById("scoreForm");
 const nicknameInput = document.getElementById("nickname");
@@ -608,8 +614,17 @@ async function handleScoreSubmit(event) {
   }
 }
 
+function getSharePayload() {
+  const text = `I solved the Survivor 5-Piece Slide Puzzle in ${formatTime(elapsedMs)} with ${moves} moves! 🔥`;
+  return {
+    title: "Survivor 5-Piece Slide Puzzle",
+    text,
+    url: SHARE_URL,
+    clipboardText: `${text}\n\n${SHARE_URL}`
+  };
+}
+
 async function copyShareText(text) {
-  // First try the modern Clipboard API.
   try {
     if (navigator.clipboard?.writeText) {
       await navigator.clipboard.writeText(text);
@@ -619,7 +634,6 @@ async function copyShareText(text) {
     console.warn("Clipboard API unavailable in this context:", error);
   }
 
-  // Fallback for restrictive iframe/browser contexts.
   try {
     const textarea = document.createElement("textarea");
     textarea.value = text;
@@ -639,53 +653,83 @@ async function copyShareText(text) {
   }
 }
 
-async function shareResult() {
-  const text = `I solved the Survivor 5-Piece Slide Puzzle in ${formatTime(elapsedMs)} with ${moves} moves! 🔥`;
-  const clipboardText = `${text}\n\n${SHARE_URL}`;
+function openShareDialog() {
+  const payload = getSharePayload();
+  shareTextEl.value = payload.clipboardText;
+  shareMessage.textContent = "";
+  shareMessage.className = "form-message";
 
-  shareBtn.disabled = true;
+  // Native sharing is optional. The in-app dialog itself always works.
+  nativeShareBtn.hidden = typeof navigator.share !== "function";
 
-  try {
-    // Native sharing is ideal on phones, but it may be blocked inside an
-    // embedded iframe unless the host grants the web-share permission.
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: "Survivor 5-Piece Slide Puzzle",
-          text,
-          url: SHARE_URL
-        });
-        shareBtn.textContent = "Shared!";
-        setTimeout(() => { shareBtn.textContent = "Share Result"; }, 1500);
-        return;
-      } catch (error) {
-        // If the player intentionally dismisses the share sheet, don't copy
-        // anything behind their back.
-        if (error?.name === "AbortError") return;
+  shareOverlay.hidden = false;
+  window.setTimeout(() => {
+    shareTextEl.focus({ preventScroll: true });
+    shareTextEl.select();
+  }, 0);
+}
 
-        console.warn("Native share unavailable; falling back to copy:", error);
-      }
-    }
+function closeShareDialog() {
+  shareOverlay.hidden = true;
+}
 
-    const copied = await copyShareText(clipboardText);
+async function copyCurrentShareResult() {
+  const payload = getSharePayload();
+  const copied = await copyShareText(payload.clipboardText);
 
-    if (copied) {
-      shareBtn.textContent = "Copied!";
-    } else {
-      // Last-resort visible feedback so the button never appears dead.
-      window.prompt("Copy your result:", clipboardText);
-      shareBtn.textContent = "Copy Result";
-    }
-
-    setTimeout(() => { shareBtn.textContent = "Share Result"; }, 1800);
-  } finally {
-    shareBtn.disabled = false;
+  if (copied) {
+    shareMessage.textContent = "Copied to clipboard. You can paste it anywhere.";
+    shareMessage.className = "form-message success";
+    copyShareBtn.textContent = "Copied!";
+    window.setTimeout(() => {
+      copyShareBtn.textContent = "Copy Result";
+    }, 1500);
+  } else {
+    // Even if browser clipboard permissions are blocked, the selected text in
+    // the dialog remains visible so the player can use Cmd/Ctrl+C manually.
+    shareTextEl.focus();
+    shareTextEl.select();
+    shareMessage.textContent = "Clipboard access is blocked here. The result is selected above; press Cmd+C or Ctrl+C to copy it.";
+    shareMessage.className = "form-message error";
   }
 }
 
+async function nativeShareCurrentResult() {
+  const payload = getSharePayload();
+
+  if (typeof navigator.share !== "function") {
+    shareMessage.textContent = "Native sharing is not available in this browser.";
+    shareMessage.className = "form-message error";
+    return;
+  }
+
+  try {
+    await navigator.share({
+      title: payload.title,
+      text: payload.text,
+      url: payload.url
+    });
+    shareMessage.textContent = "Share sheet opened. This does not copy to your clipboard.";
+    shareMessage.className = "form-message success";
+  } catch (error) {
+    if (error?.name !== "AbortError") {
+      console.warn("Native share unavailable:", error);
+      shareMessage.textContent = "Native sharing is blocked in this embed. You can still copy the result above.";
+      shareMessage.className = "form-message error";
+    }
+  }
+}
+
+
 resetBtn.addEventListener("click", resetGame);
 playAgainBtn.addEventListener("click", resetGame);
-shareBtn.addEventListener("click", shareResult);
+shareBtn.addEventListener("click", openShareDialog);
+copyShareBtn.addEventListener("click", copyCurrentShareResult);
+nativeShareBtn.addEventListener("click", nativeShareCurrentResult);
+closeShareBtn.addEventListener("click", closeShareDialog);
+shareOverlay.addEventListener("click", (event) => {
+  if (event.target === shareOverlay) closeShareDialog();
+});
 closeWinBtn.addEventListener("click", () => {
   // Closing only dismisses the results. The solved board remains frozen
   // because solved stays true. Reset is required before pieces can move again.
