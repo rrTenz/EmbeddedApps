@@ -1,0 +1,261 @@
+:root {
+  --ink: #f5f1e6;
+  --muted: #b9b6aa;
+  --panel: rgba(15, 24, 18, .93);
+  --panel-2: rgba(25, 37, 27, .92);
+  --line: rgba(237, 225, 190, .16);
+  --gold: #dfad55;
+  --gold-bright: #f3c873;
+  --shadow: 0 22px 60px rgba(0,0,0,.45);
+  --yellow: #f1cf45;
+  --orange: #e98b35;
+  --red: #d84a45;
+  --blue: #3f8fd4;
+  --green: #55a963;
+}
+
+* { box-sizing: border-box; }
+html { min-height: 100%; background: #0b100c; overscroll-behavior-y: contain; }
+body {
+  min-height: 100vh; margin: 0; color: var(--ink); overscroll-behavior-y: contain;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at 15% -10%, rgba(223,173,85,.16), transparent 35rem),
+    radial-gradient(circle at 90% 20%, rgba(67,121,82,.18), transparent 32rem),
+    linear-gradient(180deg, #172119 0%, #090d0a 100%);
+}
+/* iOS Safari's 100vh includes space the collapsible toolbar can cover, so
+   viewport-based sizing can overshoot the actually-visible area on first
+   load. 100dvh tracks the real visible viewport; guarded so browsers
+   without it keep the existing vh behavior unchanged. */
+@supports (height: 100dvh) {
+  body { min-height: 100dvh; }
+}
+button { font: inherit; -webkit-tap-highlight-color: transparent; }
+button:focus-visible { outline: 3px solid rgba(243,200,115,.8); outline-offset: 3px; }
+[hidden] { display: none !important; }
+
+.app-shell { width: min(1180px, calc(100% - 22px)); margin: 0 auto; padding: 18px 0 36px; }
+.hero { display: flex; align-items: center; gap: 13px; margin-bottom: 14px; }
+.brand-mark {
+  width: 58px; height: 58px; display: grid; place-items: center; flex: 0 0 auto;
+  border: 2px solid rgba(243,200,115,.45); border-radius: 50%; color: var(--gold-bright);
+  background: radial-gradient(circle at 35% 30%, #314f37, #122017 70%); font-weight: 950; letter-spacing: -.05em;
+  box-shadow: inset 0 0 20px rgba(0,0,0,.35), 0 10px 24px rgba(0,0,0,.3);
+}
+.eyebrow { margin: 0 0 4px; color: var(--gold); font-size: .72rem; font-weight: 900; letter-spacing: .15em; }
+.version-badge { margin-left: 5px; padding: 2px 6px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); letter-spacing: 0; }
+h1,h2,p { margin-top: 0; }
+h1 { margin-bottom: 3px; font-size: clamp(1.65rem, 4.5vw, 2.8rem); line-height: 1; }
+.subtitle { margin-bottom: 0; color: var(--muted); }
+
+.mode-screen { display: grid; place-items: center; min-height: min(620px, calc(100vh - 115px)); }
+@supports (height: 100dvh) {
+  .mode-screen { min-height: min(620px, calc(100dvh - 115px)); }
+}
+.mode-card, .game-column, .leaderboard-card {
+  border: 1px solid var(--line); border-radius: 22px;
+  background: linear-gradient(180deg, var(--panel-2), var(--panel)); box-shadow: var(--shadow);
+}
+.mode-card { width: min(720px, 100%); padding: clamp(20px, 5vw, 38px); text-align: center; }
+.mode-card h2 { margin-bottom: 7px; font-size: clamp(2rem, 7vw, 3.6rem); }
+.mode-card > p:not(.eyebrow) { color: var(--muted); }
+.mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin: 24px 0 16px; }
+.mode-choice {
+  min-height: 125px; padding: 18px; border: 1px solid rgba(243,200,115,.2); border-radius: 17px;
+  color: var(--ink); background: linear-gradient(180deg, rgba(223,173,85,.11), rgba(255,255,255,.03)); cursor: pointer;
+  transition: transform .14s ease, border-color .14s ease, background .14s ease;
+}
+.mode-choice:hover { transform: translateY(-2px); border-color: rgba(243,200,115,.5); background: rgba(223,173,85,.12); }
+.mode-choice strong { display: block; margin-bottom: 7px; color: var(--gold-bright); font-size: 1.15rem; letter-spacing: .08em; }
+.mode-choice span { color: var(--muted); line-height: 1.35; }
+.intro-tools { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 16px; }
+.text-button { border: 0; color: var(--muted); background: transparent; cursor: pointer; }
+.text-button:hover { color: var(--ink); }
+.resume-panel { margin: 18px auto 0; padding: 15px; border: 1px solid rgba(243,200,115,.25); border-radius: 15px; background: rgba(0,0,0,.18); }
+.resume-panel p { margin: 5px 0 12px; color: var(--muted); }
+
+.game-screen { display: grid; grid-template-columns: minmax(0, 780px) minmax(260px, 1fr); gap: 18px; align-items: start; }
+.game-column { padding: 12px; }
+.hud { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 9px; }
+.stat { padding: 8px 10px; border: 1px solid rgba(255,255,255,.08); border-radius: 12px; background: rgba(0,0,0,.2); text-align: center; }
+.stat span { display: block; color: var(--muted); font-size: .61rem; font-weight: 850; letter-spacing: .12em; }
+.stat strong { display: block; margin-top: 1px; font-size: 1.18rem; font-variant-numeric: tabular-nums; }
+.toolbar { display: flex; flex-wrap: wrap; justify-content: center; gap: 7px; margin-bottom: 9px; }
+.icon-button, .button, .rotate-button { cursor: pointer; transition: transform .12s ease, filter .12s ease; }
+.icon-button:hover, .button:hover, .rotate-button:hover { transform: translateY(-1px); filter: brightness(1.07); }
+.icon-button { width: 42px; height: 42px; border: 1px solid rgba(255,255,255,.11); border-radius: 12px; color: var(--ink); background: rgba(255,255,255,.06); }
+.button { min-height: 42px; padding: 0 16px; border: 0; border-radius: 12px; font-weight: 850; }
+.button.compact { min-height: 42px; padding: 0 13px; }
+.button-primary { color: #221707; background: linear-gradient(180deg, #f3c873, #d99c40); }
+.button-secondary { color: var(--ink); border: 1px solid rgba(255,255,255,.11); background: rgba(255,255,255,.06); }
+
+.board-wrap { display: flex; justify-content: center; }
+.board {
+  position: relative; width: min(95vw, 620px, calc(100vh - 245px)); aspect-ratio: 1; overflow: hidden;
+  touch-action: none; user-select: none; -webkit-touch-callout: none; border-radius: 50%;
+  background: radial-gradient(circle, #1d271f 0 19%, #131b15 20% 23%, #2a352b 24% 68%, #101611 69% 100%);
+  box-shadow: inset 0 0 0 5px #38463a, inset 0 0 0 10px #151d16, inset 0 0 55px rgba(0,0,0,.65), 0 18px 45px rgba(0,0,0,.42);
+}
+@supports (height: 100dvh) {
+  .board { width: min(95vw, 620px, calc(100dvh - 245px)); }
+}
+.board-rim { position: absolute; inset: 2.7%; border: 2px solid rgba(243,200,115,.18); border-radius: 50%; pointer-events: none; }
+.wheel { position: absolute; inset: 0; border-radius: 50%; transform: rotate(0deg); transition: transform 260ms cubic-bezier(.2,.8,.2,1); will-change: transform; }
+.chute {
+  position: absolute; left: 50%; top: 50%; width: 15.2%; height: 46.5%; transform-origin: 50% 100%;
+  display: flex; flex-direction: column; justify-content: flex-start; align-items: center; gap: 0.5%;
+  padding: 0.6% 1.2%; border: 1px solid rgba(255,255,255,.08); border-radius: 999px 999px 18px 18px;
+  background: linear-gradient(180deg, rgba(0,0,0,.37), rgba(255,255,255,.035));
+  box-shadow: inset 0 0 12px rgba(0,0,0,.32);
+}
+.chute.active {
+  box-shadow: inset 0 0 0 2px rgba(243,200,115,.48), inset 0 0 18px rgba(243,200,115,.16), 0 0 18px rgba(243,200,115,.12);
+  border-color: rgba(243,200,115,.4);
+}
+.chute.passer { border-style: dashed; border-color: rgba(255,255,255,.16); background: linear-gradient(180deg, rgba(170,170,170,.07), rgba(0,0,0,.3)); }
+.well {
+  position: relative; width: 48%; aspect-ratio: 1; flex: 0 0 auto; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.11); background: rgba(0,0,0,.34);
+  box-shadow: inset 0 3px 7px rgba(0,0,0,.48);
+}
+.normal .well[data-target="yellow"] {
+  border-color: color-mix(in srgb, var(--yellow) 70%, rgba(255,255,255,.2));
+  box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--yellow) 65%, transparent), inset 0 3px 8px rgba(0,0,0,.55), 0 0 9px 1px color-mix(in srgb, var(--yellow) 45%, transparent);
+}
+.normal .well[data-target="orange"] {
+  border-color: color-mix(in srgb, var(--orange) 70%, rgba(255,255,255,.2));
+  box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--orange) 65%, transparent), inset 0 3px 8px rgba(0,0,0,.55), 0 0 9px 1px color-mix(in srgb, var(--orange) 45%, transparent);
+}
+.normal .well[data-target="red"] {
+  border-color: color-mix(in srgb, var(--red) 70%, rgba(255,255,255,.2));
+  box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--red) 65%, transparent), inset 0 3px 8px rgba(0,0,0,.55), 0 0 9px 1px color-mix(in srgb, var(--red) 45%, transparent);
+}
+.normal .well[data-target="blue"] {
+  border-color: color-mix(in srgb, var(--blue) 70%, rgba(255,255,255,.2));
+  box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--blue) 65%, transparent), inset 0 3px 8px rgba(0,0,0,.55), 0 0 9px 1px color-mix(in srgb, var(--blue) 45%, transparent);
+}
+.normal .well[data-target="green"] {
+  border-color: color-mix(in srgb, var(--green) 70%, rgba(255,255,255,.2));
+  box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--green) 65%, transparent), inset 0 3px 8px rgba(0,0,0,.55), 0 0 9px 1px color-mix(in srgb, var(--green) 45%, transparent);
+}
+.ball {
+  position: absolute; inset: 8%; display: grid; place-items: center; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.32); box-shadow: inset 0 5px 8px rgba(255,255,255,.25), inset 0 -7px 10px rgba(0,0,0,.25), 0 3px 5px rgba(0,0,0,.38);
+  animation: ball-settle 420ms cubic-bezier(.2,.85,.28,1) both;
+}
+.ball.yellow { background: var(--yellow); } .ball.orange { background: var(--orange); } .ball.red { background: var(--red); }
+.ball.blue { background: var(--blue); } .ball.green { background: var(--green); }
+.ball .symbol { display: none; color: rgba(0,0,0,.65); font-size: clamp(.58rem, 2.1vw, 1rem); font-weight: 950; }
+body.symbols-on .ball .symbol, body.symbols-on .well .target-symbol { display: grid; }
+.target-symbol { position: absolute; inset: 0; display: none; place-items: center; color: rgba(255,255,255,.36); font-size: clamp(.58rem, 2vw, 1rem); font-weight: 950; }
+
+/* Hub: shrunk enough (radius 6% of board) that even the innermost well
+   (whose inner edge sits at ~6.8% radius, given current chute/well sizing)
+   never falls under it — see the geometry note above .chute. `overflow:
+   hidden` is load-bearing: it guarantees the ::before "opening" notch below
+   is always clipped to the hub's own circle and can never bleed outward
+   onto a well, regardless of board size, independent of any percentage math. */
+.center-slot {
+  position: absolute; z-index: 5; left: 50%; top: 50%; width: 12%; aspect-ratio: 1; transform: translate(-50%,-50%);
+  border: 3px solid #536a57; border-radius: 50%; color: var(--muted); overflow: hidden;
+  background: radial-gradient(circle at 40% 35%, #2b3d2d, #101611 72%);
+  box-shadow: inset 0 0 22px rgba(0,0,0,.55), 0 0 0 6px rgba(0,0,0,.25), 0 4px 9px -3px rgba(243,200,115,.32);
+  cursor: pointer;
+}
+/* The opening itself: a dark notch cut into the hub's own bottom edge with
+   a gold threshold line, clipped to the hub's circle by the overflow:hidden
+   above. Painted as ::before (behind .center-ball-mount in paint order) so
+   a held ball always renders on top of it. */
+.center-slot::before {
+  content: '';
+  position: absolute; left: 50%; bottom: -14%; width: 46%; height: 34%;
+  transform: translateX(-50%);
+  background: #0b100c;
+  border-top: 2px solid rgba(243,200,115,.62);
+  box-shadow: inset 0 3px 5px rgba(0,0,0,.6);
+}
+.center-ball-mount { position: absolute; inset: 15%; z-index: 1; }
+.center-ball-mount .ball { inset: 0; }
+.setting-up .ball { opacity: 0; transform: translateY(-20px) scale(.78); }
+.setting-up .ball.reveal { opacity: 1; transform: none; }
+@keyframes ball-settle { from { opacity: .1; transform: translateY(-10px) scale(.88); } to { opacity: 1; transform: none; } }
+
+/* Transfer flight: a short-lived decorative ball that travels through the
+   hub's opening. The real state change and re-render already happened by
+   the time this plays — it never gates input. */
+.flight-ball {
+  position: absolute; z-index: 7; left: 50%; top: 50%; width: 9%; aspect-ratio: 1;
+  pointer-events: none; animation-duration: 150ms; animation-timing-function: cubic-bezier(.3,.7,.3,1); animation-fill-mode: forwards;
+}
+.flight-ball.flight-in { animation-name: flight-in; }
+.flight-ball.flight-out { animation-name: flight-out; }
+@keyframes flight-in {
+  from { transform: translate(-50%, 90%) scale(.9); opacity: .85; }
+  to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+@keyframes flight-out {
+  from { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  to { transform: translate(-50%, 90%) scale(.9); opacity: .7; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flight-ball { animation-duration: .001ms !important; }
+}
+
+.rotation-controls { display: grid; grid-template-columns: 58px 1fr 58px; gap: 8px; align-items: center; max-width: 480px; margin: 10px auto 0; }
+.rotation-controls p { margin: 0; color: var(--muted); text-align: center; font-size: .82rem; }
+.rotate-button { width: 58px; height: 48px; border: 1px solid rgba(243,200,115,.28); border-radius: 14px; color: var(--gold-bright); background: rgba(223,173,85,.09); font-size: 1.6rem; }
+.game-message { min-height: 20px; margin: 8px 0 0; color: var(--muted); text-align: center; font-size: .8rem; }
+.leaderboard-card { padding: 18px; position: sticky; top: 12px; }
+.leaderboard-card h2 { margin-bottom: 8px; }
+.leaderboard-card p:last-child { color: var(--muted); line-height: 1.45; }
+
+.dialog-card { width: min(560px, calc(100% - 24px)); max-height: calc(100vh - 30px); overflow: auto; padding: 24px; border: 1px solid rgba(243,200,115,.24); border-radius: 22px; color: var(--ink); background: linear-gradient(180deg, #203025, #0e1510); box-shadow: 0 30px 90px rgba(0,0,0,.65); }
+@supports (height: 100dvh) {
+  .dialog-card { max-height: calc(100dvh - 30px); }
+}
+.dialog-card::backdrop { background: rgba(4,8,5,.78); backdrop-filter: blur(6px); }
+.dialog-card form { position: relative; }
+.dialog-close { position: absolute; right: -8px; top: -10px; width: 38px; height: 38px; border: 0; border-radius: 50%; color: var(--ink); background: rgba(255,255,255,.07); font-size: 1.6rem; cursor: pointer; }
+.dialog-card p { color: var(--muted); line-height: 1.48; }
+.controls-help { display: grid; gap: 6px; padding: 13px; border-radius: 13px; background: rgba(0,0,0,.18); color: var(--muted); }
+.controls-help strong { color: var(--ink); }
+.result-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin: 18px 0; }
+.result-grid > div { padding: 12px 8px; border: 1px solid rgba(255,255,255,.09); border-radius: 13px; background: rgba(0,0,0,.18); text-align: center; }
+.result-grid span { display: block; color: var(--muted); font-size: .65rem; font-weight: 850; letter-spacing: .1em; }
+.result-grid strong { display: block; margin-top: 3px; font-size: 1.22rem; }
+.button-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.coming-next { text-align: center; }
+
+@media (max-width: 860px) {
+  .game-screen { grid-template-columns: 1fr; }
+  .leaderboard-card { position: static; }
+}
+@media (max-width: 560px) {
+  .app-shell { width: calc(100% - 10px); padding-top: 6px; }
+  .hero { gap: 8px; margin-bottom: 7px; padding: 0 3px; }
+  .brand-mark { width: 44px; height: 44px; font-size: .82rem; }
+  h1 { font-size: 1.55rem; }
+  .subtitle { font-size: .82rem; }
+  .mode-card { padding: 18px 12px; border-radius: 17px; }
+  .mode-grid { grid-template-columns: 1fr; }
+  .mode-choice { min-height: 94px; }
+  .game-column { padding: 7px; border-radius: 16px; }
+  .hud { gap: 5px; margin-bottom: 6px; }
+  .stat { padding: 6px 5px; }
+  .stat strong { font-size: 1rem; }
+  .toolbar { gap: 5px; margin-bottom: 6px; }
+  .icon-button { width: 39px; height: 39px; }
+  .button.compact { min-height: 39px; padding: 0 10px; font-size: .78rem; }
+  .board { width: min(calc(100vw - 20px), calc(100vh - 235px), 500px); }
+  @supports (height: 100dvh) {
+    .board { width: min(calc(100vw - 20px), calc(100dvh - 235px), 500px); }
+  }
+  .rotation-controls { grid-template-columns: 52px 1fr 52px; margin-top: 7px; }
+  .rotate-button { width: 52px; height: 44px; }
+  .leaderboard-card { padding: 14px; border-radius: 16px; }
+  .result-grid { grid-template-columns: 1fr; }
+}
+@media (max-height: 720px) and (min-width: 561px) {
+  .board { width: min(70vh, 540px); }
+}
