@@ -138,7 +138,6 @@ h1 { margin-bottom: 3px; font-size: clamp(1.65rem, 4.5vw, 2.8rem); line-height: 
 .ball {
   position: absolute; inset: 8%; display: grid; place-items: center; border-radius: 50%;
   border: 2px solid rgba(255,255,255,.32); box-shadow: inset 0 5px 8px rgba(255,255,255,.25), inset 0 -7px 10px rgba(0,0,0,.25), 0 3px 5px rgba(0,0,0,.38);
-  animation: ball-settle 420ms cubic-bezier(.2,.85,.28,1) both;
 }
 .ball.yellow { background: var(--yellow); } .ball.orange { background: var(--orange); } .ball.red { background: var(--red); }
 .ball.blue { background: var(--blue); } .ball.green { background: var(--green); }
@@ -174,7 +173,7 @@ body.symbols-on .ball .symbol, body.symbols-on .well .target-symbol { display: g
 .center-ball-mount { position: absolute; inset: 15%; z-index: 1; }
 .center-ball-mount .ball { inset: 0; }
 .setting-up .ball { opacity: 0; transform: translateY(-20px) scale(.78); }
-.setting-up .ball.reveal { opacity: 1; transform: none; }
+.setting-up .ball.reveal { animation: ball-settle 420ms cubic-bezier(.2,.85,.28,1) both; }
 @keyframes ball-settle { from { opacity: .1; transform: translateY(-10px) scale(.88); } to { opacity: 1; transform: none; } }
 
 /* Transfer flight: a short-lived decorative ball that travels through the
