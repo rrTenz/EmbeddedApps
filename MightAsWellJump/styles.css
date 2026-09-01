@@ -109,10 +109,6 @@ h1 { margin-bottom: 3px; font-size: clamp(1.65rem, 4.5vw, 2.8rem); line-height: 
   background: linear-gradient(180deg, rgba(0,0,0,.37), rgba(255,255,255,.035));
   box-shadow: inset 0 0 12px rgba(0,0,0,.32);
 }
-.chute.active {
-  box-shadow: inset 0 0 0 2px rgba(243,200,115,.48), inset 0 0 18px rgba(243,200,115,.16), 0 0 18px rgba(243,200,115,.12);
-  border-color: rgba(243,200,115,.4);
-}
 .chute.passer { border-style: dashed; border-color: rgba(255,255,255,.16); background: linear-gradient(180deg, rgba(170,170,170,.07), rgba(0,0,0,.3)); }
 .well {
   position: relative; width: 48%; aspect-ratio: 1; flex: 0 0 auto; border-radius: 50%;
