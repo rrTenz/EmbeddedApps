@@ -133,11 +133,15 @@
 
       <form id="scoreForm" class="score-form" novalidate>
         <label for="displayNameInput">Add your score to the leaderboard</label>
-        <div class="score-form-row">
+        <div id="scoreFormRow" class="score-form-row">
           <input id="displayNameInput" name="displayName" type="text" maxlength="24" autocomplete="off" placeholder="Your name">
           <button id="submitScoreBtn" class="button button-primary compact" type="submit">Submit Score</button>
         </div>
         <p id="scoreMessage" class="form-message" role="status" aria-live="polite"></p>
+        <p id="scoreSubmittedState" class="score-submitted" role="status" aria-live="polite" hidden>
+          <strong id="scoreSubmittedHeadline">✓ Score submitted!</strong>
+          <span id="scoreSubmittedRank" class="score-submitted-rank"></span>
+        </p>
       </form>
 
       <div class="button-row">

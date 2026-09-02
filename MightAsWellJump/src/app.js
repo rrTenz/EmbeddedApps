@@ -24,9 +24,12 @@ const gameMessage = $('gameMessage');
 const infoDialog = $('infoDialog');
 const winDialog = $('winDialog');
 const scoreForm = $('scoreForm');
+const scoreFormRow = $('scoreFormRow');
 const displayNameInput = $('displayNameInput');
 const submitScoreBtn = $('submitScoreBtn');
 const scoreMessage = $('scoreMessage');
+const scoreSubmittedState = $('scoreSubmittedState');
+const scoreSubmittedRank = $('scoreSubmittedRank');
 const shareBtn = $('shareBtn');
 const shareMessage = $('shareMessage');
 const leaderboardStatus = $('leaderboardStatus');
@@ -258,6 +261,22 @@ function defaultLeaderboardToMode(mode) {
   loadLeaderboardSection();
 }
 
+// Makes a successful (or already-duplicate, functionally equivalent)
+// submission unmistakable: the input+button row disappears entirely (rather
+// than merely being `disabled`, which has no visual styling in this app and
+// so looks identical to an enabled button) and a distinct checkmark panel
+// takes its place. The win dialog itself is intentionally left open here —
+// the player may still want to see their rank and use Share Result.
+function enterScoreSubmittedState() {
+  scoreSubmitted = true;
+  submitScoreBtn.disabled = true;
+  scoreFormRow.hidden = true;
+  scoreMessage.textContent = '';
+  scoreMessage.className = 'form-message';
+  scoreSubmittedRank.textContent = '';
+  scoreSubmittedState.hidden = false;
+}
+
 async function handleScoreSubmit(event) {
   event.preventDefault();
   if (!state?.solved || scoreSubmitted || scoreSubmitting) return;
@@ -288,14 +307,7 @@ async function handleScoreSubmit(event) {
   if (isStale()) return;
   scoreSubmitting = false;
 
-  if (!result.ok) {
-    if (result.reason === 'duplicate') {
-      // Already recorded by an earlier attempt for this exact run — treat as success.
-      scoreSubmitted = true;
-      scoreMessage.textContent = 'Score already submitted!';
-      scoreMessage.className = 'form-message success';
-      return;
-    }
+  if (!result.ok && result.reason !== 'duplicate') {
     submitScoreBtn.disabled = false;
     scoreMessage.textContent = result.reason === 'not-configured'
       ? 'Leaderboard is unavailable right now, but your result is saved above.'
@@ -304,16 +316,17 @@ async function handleScoreSubmit(event) {
     return;
   }
 
-  scoreSubmitted = true;
-  scoreMessage.textContent = 'Score submitted!';
-  scoreMessage.className = 'form-message success';
+  // A fresh success and a retried duplicate of this exact run both mean the
+  // score is already on the leaderboard, so both get the identical
+  // unmistakable submitted state.
+  enterScoreSubmittedState();
 
   const rankResult = await leaderboardClient.fetchRank({ mode, timeMs, moves });
   if (isStale()) return;
   if (rankResult.ok) {
-    scoreMessage.textContent = rankResult.rank <= LEADERBOARD_TOP_COUNT
-      ? `Score submitted! You're #${rankResult.rank} on the leaderboard!`
-      : `Score submitted! Your rank: #${rankResult.rank}`;
+    scoreSubmittedRank.textContent = rankResult.rank <= LEADERBOARD_TOP_COUNT
+      ? `You're #${rankResult.rank} on the ${modeName(mode)} leaderboard!`
+      : `Your rank: #${rankResult.rank}`;
   }
 
   defaultLeaderboardToMode(mode);
@@ -355,6 +368,9 @@ function finishIfSolved() {
   scoreSubmitted = false;
   scoreSubmitting = false;
   submitScoreBtn.disabled = false;
+  scoreFormRow.hidden = false;
+  scoreSubmittedState.hidden = true;
+  scoreSubmittedRank.textContent = '';
   displayNameInput.value = String(loadPreference('displayName', ''));
   scoreMessage.textContent = '';
   scoreMessage.className = 'form-message';
