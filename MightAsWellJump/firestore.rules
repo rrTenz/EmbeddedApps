@@ -1,0 +1,82 @@
+rules_version = '2';
+
+// Firestore rules for the survivor-geek-apps project. This project is shared
+// across sibling Survivor Geek games in this repo (see
+// survivor-5-piece-slide-puzzle/firestore.rules) and Firestore has exactly
+// one rules document per project, so this file is the union of both: the
+// slidePuzzleScores block below is copied verbatim, unmodified, from that
+// sibling file, and the mightAsWellJumpScores block is new. Publish this
+// whole file to the Firebase Console (it replaces the console's rules text,
+// but not any of the rules themselves) rather than only the new block.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /slidePuzzleScores/{scoreId} {
+      // Anyone can view the public leaderboard.
+      allow read: if true;
+
+      // A player never sees a login screen, but the app signs them in
+      // anonymously before submitting a score.
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly([
+          'game', 'version', 'name', 'timeMs', 'moves', 'createdAt'
+        ])
+        && request.resource.data.game == 'survivor-5-piece'
+        && request.resource.data.version == 1
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 2
+        && request.resource.data.name.size() <= 20
+        && request.resource.data.timeMs is int
+        && request.resource.data.timeMs >= 3000
+        && request.resource.data.timeMs <= 3600000
+        && request.resource.data.moves is int
+        && request.resource.data.moves >= 44
+        && request.resource.data.moves <= 5000
+        && request.resource.data.createdAt == request.time;
+
+      // Scores are immutable from the public app. Delete inappropriate or
+      // suspicious entries from the Firebase console as the project owner.
+      allow update, delete: if false;
+    }
+
+    match /mightAsWellJumpScores/{scoreId} {
+      // Public leaderboard: anyone can read.
+      allow read: if true;
+
+      // A player never sees a login screen; the app signs them in
+      // anonymously before submitting a score. The client writes each score
+      // with a client-generated runId as the document id (see
+      // src/leaderboard-service.js) so a retried/duplicated submission for
+      // the exact same completed run hits this same document id — and since
+      // `allow update` is false below, Firestore rejects that second write
+      // outright rather than creating a duplicate leaderboard row.
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly([
+          'game', 'version', 'mode', 'displayName', 'timeMs', 'moves', 'uid', 'runId', 'createdAt'
+        ])
+        && request.resource.data.game == 'might-as-well-jump'
+        && request.resource.data.version == 1
+        && request.resource.data.mode in ['standard', 'random']
+        && request.resource.data.displayName is string
+        && request.resource.data.displayName.size() >= 2
+        && request.resource.data.displayName.size() <= 24
+        && request.resource.data.timeMs is int
+        && request.resource.data.timeMs > 0
+        && request.resource.data.moves is int
+        && request.resource.data.moves >= 0
+        && request.resource.data.uid is string
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.runId is string
+        && request.resource.data.runId == scoreId
+        && request.resource.data.createdAt == request.time;
+
+      // Scores are immutable from the public app, and re-creating an
+      // existing scoreId is itself an update, not a create, so this line is
+      // also what makes duplicate-run submission fail server-side. Delete
+      // inappropriate or suspicious entries from the Firebase console as the
+      // project owner.
+      allow update, delete: if false;
+    }
+  }
+}

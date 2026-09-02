@@ -202,8 +202,37 @@ body.symbols-on .ball .symbol, body.symbols-on .well .target-symbol { display: g
 .rotate-button { width: 58px; height: 48px; border: 1px solid rgba(243,200,115,.28); border-radius: 14px; color: var(--gold-bright); background: rgba(223,173,85,.09); font-size: 1.6rem; }
 .game-message { min-height: 20px; margin: 8px 0 0; color: var(--muted); text-align: center; font-size: .8rem; }
 .leaderboard-card { padding: 18px; position: sticky; top: 12px; }
-.leaderboard-card h2 { margin-bottom: 8px; }
+.leaderboard-card h2 { margin-bottom: 0; }
 .leaderboard-card p:last-child { color: var(--muted); line-height: 1.45; }
+.leaderboard-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+.leaderboard-modes { display: flex; gap: 4px; padding: 3px; border: 1px solid rgba(255,255,255,.09); border-radius: 999px; background: rgba(0,0,0,.2); }
+.leaderboard-mode-btn { border: 0; padding: 5px 11px; border-radius: 999px; color: var(--muted); background: transparent; font-size: .74rem; font-weight: 850; cursor: pointer; }
+.leaderboard-mode-btn[aria-pressed="true"] { color: #221707; background: linear-gradient(180deg, #f3c873, #d99c40); }
+.leaderboard-status { margin: 0 0 8px; color: var(--muted); font-size: .82rem; }
+.leaderboard-status.error { color: #ffb8a5; }
+.leaderboard-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; }
+.leaderboard-row {
+  display: grid; grid-template-columns: 26px 1fr auto auto; align-items: center; gap: 8px;
+  padding: 7px 9px; border: 1px solid rgba(255,255,255,.07); border-radius: 11px; background: rgba(0,0,0,.16);
+}
+.leaderboard-row.own-rank { border-color: rgba(243,200,115,.5); background: rgba(223,173,85,.1); }
+.leaderboard-row .rank { color: var(--gold); font-weight: 900; font-variant-numeric: tabular-nums; }
+.leaderboard-row .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.leaderboard-row .time { font-variant-numeric: tabular-nums; color: var(--gold-bright); font-weight: 800; }
+.leaderboard-row .moves { color: var(--muted); font-size: .78rem; white-space: nowrap; }
+.leaderboard-see-more { display: block; margin: 8px auto; }
+
+.score-form { margin: 16px 0; text-align: left; }
+.score-form label { display: block; margin-bottom: 6px; color: var(--muted); font-size: .78rem; font-weight: 850; letter-spacing: .04em; }
+.score-form-row { display: flex; gap: 8px; }
+.score-form-row input {
+  flex: 1; min-width: 0; min-height: 42px; padding: 0 12px; border: 1px solid rgba(255,255,255,.14); border-radius: 12px;
+  color: var(--ink); background: rgba(0,0,0,.24); font: inherit;
+}
+.score-form-row input:focus-visible { outline: 3px solid rgba(243,200,115,.8); outline-offset: 1px; }
+.form-message { min-height: 18px; margin: 7px 0 0; color: var(--muted); font-size: .8rem; }
+.form-message.error { color: #ffb8a5; }
+.form-message.success { color: #a7e7d0; }
 
 .dialog-card { width: min(560px, calc(100% - 24px)); max-height: calc(100vh - 30px); overflow: auto; padding: 24px; border: 1px solid rgba(243,200,115,.24); border-radius: 22px; color: var(--ink); background: linear-gradient(180deg, #203025, #0e1510); box-shadow: 0 30px 90px rgba(0,0,0,.65); }
 @supports (height: 100dvh) {
@@ -220,7 +249,6 @@ body.symbols-on .ball .symbol, body.symbols-on .well .target-symbol { display: g
 .result-grid span { display: block; color: var(--muted); font-size: .65rem; font-weight: 850; letter-spacing: .1em; }
 .result-grid strong { display: block; margin-top: 3px; font-size: 1.22rem; }
 .button-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-.coming-next { text-align: center; }
 
 @media (max-width: 860px) {
   .game-screen { grid-template-columns: 1fr; }
@@ -250,6 +278,10 @@ body.symbols-on .ball .symbol, body.symbols-on .well .target-symbol { display: g
   .rotate-button { width: 52px; height: 44px; }
   .leaderboard-card { padding: 14px; border-radius: 16px; }
   .result-grid { grid-template-columns: 1fr; }
+  .score-form-row { flex-wrap: wrap; }
+  .score-form-row input { width: 100%; }
+  .score-form-row .button { width: 100%; }
+  .leaderboard-row { grid-template-columns: 22px 1fr auto auto; font-size: .88rem; }
 }
 @media (max-height: 720px) and (min-width: 561px) {
   .board { width: min(70vh, 540px); }

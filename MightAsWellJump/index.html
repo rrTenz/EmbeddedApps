@@ -87,8 +87,17 @@
 
       <aside class="leaderboard-card" aria-labelledby="leaderboardTitle">
         <p class="eyebrow">CHALLENGE LEADERS</p>
-        <h2 id="leaderboardTitle">Leaderboard</h2>
-        <p>Public Standard and Random leaderboards arrive in the next implementation milestone.</p>
+        <div class="leaderboard-head">
+          <h2 id="leaderboardTitle">Leaderboard</h2>
+          <div class="leaderboard-modes" role="group" aria-label="Leaderboard mode">
+            <button id="leaderboardModeStandardBtn" class="leaderboard-mode-btn" type="button" aria-pressed="true">Standard</button>
+            <button id="leaderboardModeRandomBtn" class="leaderboard-mode-btn" type="button" aria-pressed="false">Random</button>
+          </div>
+        </div>
+        <p id="leaderboardStatus" class="leaderboard-status" role="status" aria-live="polite">Loading scores…</p>
+        <ol id="leaderboardList" class="leaderboard-list"></ol>
+        <button id="leaderboardSeeMoreBtn" class="text-button leaderboard-see-more" type="button" hidden>See More</button>
+        <p class="leaderboard-note">Ranked by fastest time. Fewer moves breaks a tie.</p>
       </aside>
     </section>
   </main>
@@ -121,7 +130,21 @@
         <div><span>MOVES</span><strong id="finalMoves">0</strong></div>
         <div><span>MODE</span><strong id="finalMode">Standard</strong></div>
       </div>
-      <p class="coming-next">Leaderboard submission and Share Result will be added in the next milestone.</p>
+
+      <form id="scoreForm" class="score-form" novalidate>
+        <label for="displayNameInput">Add your score to the leaderboard</label>
+        <div class="score-form-row">
+          <input id="displayNameInput" name="displayName" type="text" maxlength="24" autocomplete="off" placeholder="Your name">
+          <button id="submitScoreBtn" class="button button-primary compact" type="submit">Submit Score</button>
+        </div>
+        <p id="scoreMessage" class="form-message" role="status" aria-live="polite"></p>
+      </form>
+
+      <div class="button-row">
+        <button id="shareBtn" class="button button-secondary" type="button">Share Result</button>
+      </div>
+      <p id="shareMessage" class="form-message" role="status" aria-live="polite"></p>
+
       <div class="button-row">
         <button id="playAgainBtn" class="button button-primary" type="button">Play Again</button>
         <button id="closeWinBtn" class="button button-secondary" type="button">Close</button>

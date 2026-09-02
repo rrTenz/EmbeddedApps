@@ -1,0 +1,14 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "mightAsWellJumpScores",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "mode", "order": "ASCENDING" },
+        { "fieldPath": "timeMs", "order": "ASCENDING" },
+        { "fieldPath": "moves", "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

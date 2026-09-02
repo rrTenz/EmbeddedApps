@@ -5,6 +5,10 @@ import {
 import { createInputController, parseWheelDeg, shortestSnapAngle } from './input-controller.js';
 import { saveActiveGame, loadActiveGame, clearActiveGame, savePreference, loadPreference } from './persistence.js';
 import { playTransferFlight } from './transfer-animation.js';
+import { formatTime } from './format.js';
+import { validateDisplayName } from './display-name.js';
+import { buildShareText, shareResult, SHARE_URL } from './share.js';
+import { createLeaderboardClient, createRunId } from './leaderboard-service.js';
 
 const $ = id => document.getElementById(id);
 const modeScreen = $('modeScreen');
@@ -19,9 +23,22 @@ const modeLabel = $('modeLabel');
 const gameMessage = $('gameMessage');
 const infoDialog = $('infoDialog');
 const winDialog = $('winDialog');
+const scoreForm = $('scoreForm');
+const displayNameInput = $('displayNameInput');
+const submitScoreBtn = $('submitScoreBtn');
+const scoreMessage = $('scoreMessage');
+const shareBtn = $('shareBtn');
+const shareMessage = $('shareMessage');
+const leaderboardStatus = $('leaderboardStatus');
+const leaderboardList = $('leaderboardList');
+const leaderboardSeeMoreBtn = $('leaderboardSeeMoreBtn');
+const leaderboardModeStandardBtn = $('leaderboardModeStandardBtn');
+const leaderboardModeRandomBtn = $('leaderboardModeRandomBtn');
 
 const SYMBOLS = { yellow: '●', orange: '▲', red: '■', blue: '◆', green: '★' };
 const FLIGHT_MS = 150;
+const LEADERBOARD_TOP_COUNT = 10;
+const LEADERBOARD_EXPANDED_COUNT = 50;
 let state = null;
 let startedAtEpochMs = null;
 let elapsedMs = 0;
@@ -31,12 +48,13 @@ let setupToken = 0;
 let symbolsOn = Boolean(loadPreference('symbols', false));
 let soundOn = Boolean(loadPreference('sound', false));
 
-function formatTime(ms) {
-  const tenths = Math.floor(Math.max(0, ms) / 100);
-  const minutes = Math.floor(tenths / 600);
-  const seconds = Math.floor(tenths / 10) % 60;
-  return `${minutes}:${String(seconds).padStart(2,'0')}.${tenths % 10}`;
-}
+const leaderboardClient = createLeaderboardClient();
+let leaderboardMode = MODE.STANDARD;
+let leaderboardExpanded = false;
+let leaderboardLoadToken = 0;
+let currentRunId = null;
+let scoreSubmitted = false;
+let scoreSubmitting = false;
 
 function setMessage(text) { gameMessage.textContent = text; }
 
@@ -166,6 +184,157 @@ function startTimerLoop() {
   timerFrame = requestAnimationFrame(tick);
 }
 
+function renderLeaderboardRows(scores) {
+  leaderboardList.replaceChildren();
+  if (!scores.length) {
+    const li = document.createElement('li');
+    li.className = 'leaderboard-row leaderboard-empty';
+    li.textContent = 'No scores yet. Be the first!';
+    leaderboardList.appendChild(li);
+    return;
+  }
+  scores.forEach((score, index) => {
+    const li = document.createElement('li');
+    li.className = 'leaderboard-row';
+    const rank = document.createElement('span');
+    rank.className = 'rank';
+    rank.textContent = String(index + 1);
+    const name = document.createElement('span');
+    name.className = 'name';
+    name.textContent = String(score.displayName || 'Player');
+    const time = document.createElement('span');
+    time.className = 'time';
+    time.textContent = formatTime(Number(score.timeMs) || 0);
+    const moves = document.createElement('span');
+    moves.className = 'moves';
+    moves.textContent = `${Number(score.moves) || 0} mv`;
+    li.append(rank, name, time, moves);
+    leaderboardList.appendChild(li);
+  });
+}
+
+// Re-entrant safe: a stale in-flight fetch (from a prior mode switch or
+// See More click) can no longer clobber a newer one's result, since only the
+// call that matches the current token is allowed to render.
+async function loadLeaderboardSection() {
+  const token = ++leaderboardLoadToken;
+  leaderboardStatus.hidden = false;
+  leaderboardStatus.textContent = 'Loading scores…';
+  leaderboardStatus.className = 'leaderboard-status';
+
+  const count = leaderboardExpanded ? LEADERBOARD_EXPANDED_COUNT : LEADERBOARD_TOP_COUNT;
+  const result = await leaderboardClient.fetchTop({ mode: leaderboardMode, count });
+  if (token !== leaderboardLoadToken) return;
+
+  if (!result.ok) {
+    leaderboardList.replaceChildren();
+    leaderboardStatus.textContent = result.reason === 'not-configured'
+      ? 'Leaderboard is not available right now.'
+      : 'Could not load the leaderboard. Please try again later.';
+    leaderboardStatus.className = 'leaderboard-status error';
+    leaderboardSeeMoreBtn.hidden = true;
+    return;
+  }
+
+  leaderboardStatus.hidden = true;
+  renderLeaderboardRows(result.scores);
+  leaderboardSeeMoreBtn.hidden = leaderboardExpanded || result.scores.length < LEADERBOARD_TOP_COUNT;
+}
+
+function switchLeaderboardMode(mode) {
+  if (mode === leaderboardMode) return;
+  leaderboardMode = mode;
+  leaderboardExpanded = false;
+  leaderboardModeStandardBtn.setAttribute('aria-pressed', String(mode === MODE.STANDARD));
+  leaderboardModeRandomBtn.setAttribute('aria-pressed', String(mode === MODE.RANDOM));
+  loadLeaderboardSection();
+}
+
+function defaultLeaderboardToMode(mode) {
+  leaderboardExpanded = false;
+  leaderboardMode = mode;
+  leaderboardModeStandardBtn.setAttribute('aria-pressed', String(mode === MODE.STANDARD));
+  leaderboardModeRandomBtn.setAttribute('aria-pressed', String(mode === MODE.RANDOM));
+  loadLeaderboardSection();
+}
+
+async function handleScoreSubmit(event) {
+  event.preventDefault();
+  if (!state?.solved || scoreSubmitted || scoreSubmitting) return;
+
+  const validation = validateDisplayName(displayNameInput.value);
+  if (!validation.ok) {
+    scoreMessage.textContent = validation.message;
+    scoreMessage.className = 'form-message error';
+    return;
+  }
+
+  // Guards against a stale in-flight submission (e.g. Submit then immediately
+  // Play Again before the network call resolves) writing its result into a
+  // *different* completed run's dialog once it finally settles.
+  const runIdAtSubmit = currentRunId;
+  const isStale = () => currentRunId !== runIdAtSubmit;
+
+  scoreSubmitting = true;
+  submitScoreBtn.disabled = true;
+  scoreMessage.textContent = 'Submitting…';
+  scoreMessage.className = 'form-message';
+  savePreference('displayName', validation.name);
+
+  const mode = state.mode;
+  const timeMs = Math.max(1, Math.round(elapsedMs));
+  const moves = state.moves;
+  const result = await leaderboardClient.submitScore({ mode, displayName: validation.name, timeMs, moves, runId: runIdAtSubmit });
+  if (isStale()) return;
+  scoreSubmitting = false;
+
+  if (!result.ok) {
+    if (result.reason === 'duplicate') {
+      // Already recorded by an earlier attempt for this exact run — treat as success.
+      scoreSubmitted = true;
+      scoreMessage.textContent = 'Score already submitted!';
+      scoreMessage.className = 'form-message success';
+      return;
+    }
+    submitScoreBtn.disabled = false;
+    scoreMessage.textContent = result.reason === 'not-configured'
+      ? 'Leaderboard is unavailable right now, but your result is saved above.'
+      : 'Score submission failed. You can try again.';
+    scoreMessage.className = 'form-message error';
+    return;
+  }
+
+  scoreSubmitted = true;
+  scoreMessage.textContent = 'Score submitted!';
+  scoreMessage.className = 'form-message success';
+
+  const rankResult = await leaderboardClient.fetchRank({ mode, timeMs, moves });
+  if (isStale()) return;
+  if (rankResult.ok) {
+    scoreMessage.textContent = rankResult.rank <= LEADERBOARD_TOP_COUNT
+      ? `Score submitted! You're #${rankResult.rank} on the leaderboard!`
+      : `Score submitted! Your rank: #${rankResult.rank}`;
+  }
+
+  defaultLeaderboardToMode(mode);
+}
+
+async function handleShareResult() {
+  if (!state) return;
+  const text = buildShareText({ mode: state.mode, timeMs: elapsedMs, moves: state.moves });
+  shareMessage.textContent = '';
+  shareMessage.className = 'form-message';
+  const result = await shareResult({ text, url: SHARE_URL, title: 'Might As Well Jump', nav: window.navigator, doc: document });
+  if (result.cancelled) return;
+  if (!result.ok) {
+    shareMessage.textContent = 'Could not share automatically. You can copy your result manually.';
+    shareMessage.className = 'form-message error';
+    return;
+  }
+  shareMessage.textContent = result.method === 'native' ? 'Share sheet opened!' : 'Result copied!';
+  shareMessage.className = 'form-message success';
+}
+
 function finishIfSolved() {
   if (!isSolved(state)) return false;
   state.solved = true;
@@ -178,6 +347,21 @@ function finishIfSolved() {
   $('finalMoves').textContent = String(state.moves);
   $('finalMode').textContent = modeName(state.mode);
   setMessage('Challenge complete!');
+
+  // A fresh runId per completed game is the server-enforced half of duplicate
+  // submission prevention: leaderboardClient.submitScore writes keyed by this
+  // id, and Firestore rejects a second write to the same id as an update.
+  currentRunId = createRunId();
+  scoreSubmitted = false;
+  scoreSubmitting = false;
+  submitScoreBtn.disabled = false;
+  displayNameInput.value = String(loadPreference('displayName', ''));
+  scoreMessage.textContent = '';
+  scoreMessage.className = 'form-message';
+  shareMessage.textContent = '';
+  shareMessage.className = 'form-message';
+  defaultLeaderboardToMode(state.mode);
+
   winDialog.showModal();
   return true;
 }
@@ -262,6 +446,7 @@ async function beginGame(newState, { animate = true } = {}) {
   const token = ++setupToken;
   renderBoard({ setup: animate });
   setMessage(animate ? 'Setting up the challenge…' : 'Align a chute with the hub to move a ball.');
+  defaultLeaderboardToMode(newState.mode);
 
   if (animate) {
     const balls = [...document.querySelectorAll('.ball')];
@@ -299,6 +484,7 @@ function resumeSavedGame() {
   renderBoard();
   timerEl.textContent = formatTime(elapsedMs);
   setMessage('Game resumed. The clock continued while you were away.');
+  defaultLeaderboardToMode(state.mode);
   if (state.started) startTimerLoop();
 }
 
@@ -333,6 +519,15 @@ for (const id of ['soundToggle','soundToggleIntro']) $(id).addEventListener('cli
 $('resumeBtn').addEventListener('click', resumeSavedGame);
 $('discardBtn').addEventListener('click', () => { clearActiveGame(); $('resumePanel').hidden = true; });
 
+scoreForm.addEventListener('submit', handleScoreSubmit);
+shareBtn.addEventListener('click', handleShareResult);
+leaderboardModeStandardBtn.addEventListener('click', () => switchLeaderboardMode(MODE.STANDARD));
+leaderboardModeRandomBtn.addEventListener('click', () => switchLeaderboardMode(MODE.RANDOM));
+leaderboardSeeMoreBtn.addEventListener('click', () => {
+  leaderboardExpanded = true;
+  loadLeaderboardSection();
+});
+
 createInputController({
   board,
   wheel,
@@ -349,3 +544,4 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) persi
 
 applyPreferences();
 refreshResumePanel();
+loadLeaderboardSection();
