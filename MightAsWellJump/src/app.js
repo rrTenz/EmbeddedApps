@@ -9,6 +9,7 @@ import { formatTime } from './format.js';
 import { validateDisplayName } from './display-name.js';
 import { buildShareText, shareResult, SHARE_URL } from './share.js';
 import { createLeaderboardClient, createRunId } from './leaderboard-service.js';
+import { createAudioController } from './audio.js';
 
 const $ = id => document.getElementById(id);
 const modeScreen = $('modeScreen');
@@ -50,6 +51,18 @@ let inputEnabled = false;
 let setupToken = 0;
 let symbolsOn = Boolean(loadPreference('symbols', false));
 let soundOn = Boolean(loadPreference('sound', false));
+
+const audio = createAudioController();
+// Central gate for every game sound: the existing Sound toggle is the sole
+// control, and this is the sole place that checks it. A failure inside
+// audio.js is already swallowed there, but this catch is a second,
+// independent safety net at the call-site layer — sound must never be able
+// to interrupt a real game action (transfer/rotate/win) regardless of which
+// layer a future bug lands in.
+function playSound(effect) {
+  if (!soundOn) return;
+  try { effect(); } catch { /* decorative only */ }
+}
 
 const leaderboardClient = createLeaderboardClient();
 let leaderboardMode = MODE.STANDARD;
@@ -95,7 +108,6 @@ function toggleSound() {
   soundOn = !soundOn;
   savePreference('sound', soundOn);
   applyPreferences();
-  // Audio effects are added in the next milestone; preference/UI is already wired.
 }
 
 function createBall(color) {
@@ -352,6 +364,11 @@ function finishIfSolved() {
   if (!isSolved(state)) return false;
   state.solved = true;
   inputEnabled = false;
+  // isSolved() only returns true once, right at the unsolved -> solved
+  // transition (state.solved just flipped, and inputEnabled=false now blocks
+  // every further transfer, so finishIfSolved's body can never run again for
+  // this run) — so this fires exactly once per completed game.
+  playSound(() => audio.playWin());
   if (state.started && startedAtEpochMs !== null) elapsedMs = Date.now() - startedAtEpochMs;
   if (timerFrame) cancelAnimationFrame(timerFrame);
   timerEl.textContent = formatTime(elapsedMs);
@@ -395,6 +412,7 @@ function performTransfer(result, direction, beforeState) {
   const flightColor = direction === 'in' ? result.state.center : beforeState.center;
   state = result.state;
   startTimerIfNeeded();
+  playSound(() => audio.playTransfer({ color: flightColor, direction }));
   renderBoard();
   playTransferFlight({ container: board, color: flightColor, direction, duration: FLIGHT_MS, reducedMotion: prefersReducedMotion() });
   setMessage(direction === 'in' ? 'Ball moved to hub.' : 'Ball placed in chute.');
@@ -427,6 +445,7 @@ function rotateBy(deltaStops) {
   renderActiveHighlight();
   if (result.changed) {
     startTimerIfNeeded();
+    playSound(() => audio.playSnap());
     setMessage(`Chute ${state.wheelStop === 0 ? 'Passer' : state.wheelStop} aligned.`);
     persistIfActive();
   }
@@ -451,6 +470,10 @@ function confirmLoss(action) {
 }
 
 async function beginGame(newState, { animate = true } = {}) {
+  // Covers Standard/Random/Restart/New Random/Play Again: if a win cheer is
+  // still within its 5-second window from the previous run, a fresh game
+  // starting should not keep it playing underneath.
+  audio.stopWin();
   state = newState;
   startedAtEpochMs = null;
   elapsedMs = 0;
@@ -520,6 +543,7 @@ $('newRandomBtn').addEventListener('click', () => {
 });
 $('switchModeBtn').addEventListener('click', () => {
   if (!confirmLoss('Return to mode selection')) return;
+  audio.stopWin();
   clearActiveGame();
   if (timerFrame) cancelAnimationFrame(timerFrame);
   state = null;
