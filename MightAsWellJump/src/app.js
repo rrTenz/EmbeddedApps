@@ -7,7 +7,7 @@ import { saveActiveGame, loadActiveGame, clearActiveGame, savePreference, loadPr
 import { playTransferFlight } from './transfer-animation.js';
 import { formatTime } from './format.js';
 import { validateDisplayName } from './display-name.js';
-import { buildShareText, shareResult, SHARE_URL } from './share.js';
+import { buildShareText, shareResult } from './share.js';
 import { createLeaderboardClient, createRunId } from './leaderboard-service.js';
 import { createAudioController } from './audio.js';
 
@@ -349,7 +349,11 @@ async function handleShareResult() {
   const text = buildShareText({ mode: state.mode, timeMs: elapsedMs, moves: state.moves });
   shareMessage.textContent = '';
   shareMessage.className = 'form-message';
-  const result = await shareResult({ text, url: SHARE_URL, title: 'Might As Well Jump', nav: window.navigator, doc: document });
+  // buildShareText() already appends SHARE_URL as the text's last line, so a
+  // separate `url` is not passed here too — on the native Web Share API
+  // path, passing both caused several share targets (notably iOS) to show
+  // the link twice: once embedded in the text, once as its own url field.
+  const result = await shareResult({ text, title: 'Might As Well Jump', nav: window.navigator, doc: document });
   if (result.cancelled) return;
   if (!result.ok) {
     shareMessage.textContent = 'Could not share automatically. You can copy your result manually.';
